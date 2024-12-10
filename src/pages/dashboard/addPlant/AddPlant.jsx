@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import InputField from './InputField';
 import SelectField from './SelectField';
 import TextAreaField from './TextAreaField';
-import CheckboxField from './CheckBoxField';
+import CheckboxField from './CheckboxField';
 
 const AddPlant = () => {
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
