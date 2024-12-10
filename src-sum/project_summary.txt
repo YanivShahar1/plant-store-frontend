@@ -1,0 +1,2543 @@
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\App.css ---
+
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+.swiper {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .swiper-slide {
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+  
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+ .swiper-button-prev {
+    display: none !important;
+ }
+ .swiper-button-next{
+    @apply bg-white p-5 rounded-full z-50 shadow-md
+ }
+
+ .swiper-button-prev:after, .swiper-button-next:after{
+    font-size: 16px !important;
+ }
+
+ .btn-primary {
+    @apply bg-primary  px-12 py-2 rounded-md text-base font-secondary font-bold hover:bg-secondary hover:text-white transition-all duration-200 cursor-pointer
+ }
+
+.html{
+   scroll-behavior: smooth;
+}
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\App.jsx ---
+
+
+import { Outlet } from 'react-router-dom'
+import './App.css'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import { AuthProvide } from './context/AuthContext'
+import { useEffect, useState } from 'react'
+import Loading from './components/Loading'
+
+function App() {
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); 
+
+    // Cleanup timer
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />; 
+  }
+
+
+  return (
+    <>
+      <AuthProvide>
+        <Navbar />
+        <main className='min-h-screen max-w-screen-2xl mx-auto px-4 py-6 font-primary'>
+          <Outlet />
+        </main>
+        <Footer />
+      </AuthProvide>
+
+    </>
+  )
+}
+
+export default App
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\index.css ---
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\main.jsx ---
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+import { RouterProvider } from 'react-router-dom'
+import router from './routers/router.jsx'
+
+import { Provider } from 'react-redux'
+import { store } from './redux/store.js'
+
+createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>,
+)
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\components\AdminLogin.jsx ---
+
+import React, { useState } from 'react'
+import { useForm } from "react-hook-form"
+import axios from "axios"
+import getBaseUrl from '../utils/baseURL'
+import { useNavigate } from 'react-router-dom'
+
+/**
+ * AdminLogin Component
+ * Provides a login interface for admin users with form validation and authentication
+ * Features:
+ * - Form validation using react-hook-form
+ * - JWT token management
+ * - Auto logout after token expiration (1 hour)
+ * - Error handling and user feedback
+ */
+const AdminLogin = () => {
+    // State for error message display
+    const [message, setMessage] = useState("")
+
+    // Initialize react-hook-form with destructured methods
+    const {
+        register,        // Method to register form inputs
+        handleSubmit,    // Method to handle form submission
+        formState: { errors }, // Form validation errors
+    } = useForm()
+
+    // Hook for programmatic navigation
+    const navigate = useNavigate()
+
+    /**
+     * Handles form submission and authentication
+     * @param {Object} data - Form data containing username and password
+     */
+    const onSubmit = async (data) => {
+        try {
+            // Make POST request to admin authentication endpoint
+            const response = await axios.post(`${getBaseUrl()}/api/auth/admin`, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const auth = response.data;
+
+            // Handle successful authentication
+            if(auth.token) {
+                // Store JWT token in localStorage
+                localStorage.setItem('token', auth.token);
+
+                // Set token expiration (1 hour)
+                setTimeout(() => {
+                    localStorage.removeItem('token')
+                    alert('Token has been expired!, Please login again.');
+                    navigate("/")
+                }, 3600 * 1000) // 1 hour in milliseconds
+            }
+
+            // Notify user and redirect to dashboard
+            alert("Admin Login successful!")
+            navigate("/dashboard")
+
+        } catch (error) {
+            // Handle authentication errors
+            setMessage("Please provide a valid email and password") 
+            console.error(error)
+        }
+    }
+
+    return (
+        // Main container with centered content
+        <div className='h-screen flex justify-center items-center '>
+            {/* Login form card */}
+            <div className='w-full max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
+                <h2 className='text-xl font-semibold mb-4'>Admin Dashboard Login </h2>
+
+                {/* Login form */}
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    {/* Username field */}
+                    <div className='mb-4'>
+                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="username">
+                            Username
+                        </label>
+                        <input 
+                            {...register("username", { required: true })} 
+                            type="text"
+                            name="username"
+                            id="username"
+                            placeholder='username'
+                            className='shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow'
+                        />
+                    </div>
+
+                    {/* Password field */}
+                    <div className='mb-4'>
+                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="password">
+                            Password
+                        </label>
+                        <input 
+                            {...register("password", { required: true })} 
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder='Password'
+                            className='shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow'
+                        />
+                    </div>
+
+                    {/* Error message display */}
+                    {message && <p className='text-red-500 text-xs italic mb-3'>{message}</p>}
+
+                    {/* Submit button */}
+                    <div className='w-full'>
+                        <button className='bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-8 rounded focus:outline-none'>
+                            Login 
+                        </button>
+                    </div>
+                </form>
+
+                {/* Footer */}
+                <p className='mt-5 text-center text-gray-500 text-xs'>
+                    ©2025 Book Store. All rights reserved.
+                </p>
+            </div>
+        </div>
+    )
+}
+
+export default AdminLogin
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\components\Footer.jsx ---
+
+import React from 'react'
+import footerLogo  from "../assets/footer-logo.png"
+
+import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa"
+
+const Footer = () => {
+    return (
+        <footer className="bg-gray-900 text-white py-10 px-4">
+            {/* Top Section */}
+            <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            {/* Left Side - Logo and Nav */}
+            <div className="md:w-1/2 w-full">
+                <img src={footerLogo} alt="Logo" className="mb-5 w-36" />
+                <ul className="flex flex-col md:flex-row gap-4">
+                <li><a href="#home" className="hover:text-primary">Home</a></li>
+                <li><a href="#services" className="hover:text-primary">Services</a></li>
+                <li><a href="#about" className="hover:text-primary">About Us</a></li>
+                <li><a href="#contact" className="hover:text-primary">Contact</a></li>
+                </ul>
+            </div>
+
+            {/* Right Side - Newsletter */}
+            <div className="md:w-1/2 w-full">
+                <p className="mb-4">
+                Subscribe to our newsletter to receive the latest updates, news, and offers!
+                </p>
+                <div className="flex">
+                <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full px-4 py-2 rounded-l-md text-black"
+                />
+                <button className="bg-primary px-6 py-2 rounded-r-md hover:bg-primary-dark">
+                    Subscribe
+                </button>
+                </div>
+            </div>
+            </div>
+
+            {/* Bottom Section */}
+            <div className="container mx-auto flex flex-col md:flex-row justify-between items-center mt-10 border-t border-gray-700 pt-6">
+            {/* Left Side - Privacy Links */}
+            <ul className="flex gap-6 mb-4 md:mb-0">
+                <li><a href="#privacy" className="hover:text-primary">Privacy Policy</a></li>
+                <li><a href="#terms" className="hover:text-primary">Terms of Service</a></li>
+            </ul>
+
+            {/* Right Side - Social Icons */}
+            <div className="flex gap-6">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                <FaFacebook size={24} />
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                <FaTwitter size={24} />
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                <FaInstagram size={24} />
+                </a>
+            </div>
+            </div>
+        </footer>
+    )
+}
+
+export default Footer;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\components\Loading.jsx ---
+
+import React from 'react';
+
+const Loading = () => {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
+    </div>
+  );
+};
+
+export default Loading;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\components\Login.jsx ---
+
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { FaGoogle } from "react-icons/fa";
+import { useForm } from "react-hook-form"
+import { useAuth } from '../context/AuthContext';
+
+export const Login = () => {
+    const [message, setMessage] = useState("")
+    const { loginUser, signInWithGoogle} = useAuth();
+    const navigate = useNavigate()
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+      } = useForm()
+
+      const onSubmit = async (data) => {
+        try {
+            await loginUser(data.email, data.password);
+            alert("Login successful!");
+            navigate("/")
+        } catch (error) {
+            setMessage("Please provide a valid email and password") 
+            console.error(error)
+        }
+      }
+
+      const handleGoogleSignIn = async () => {
+        try {
+            await signInWithGoogle();
+            alert("Login successful!");
+            navigate("/")
+        } catch (error) {
+            alert("Google sign in failed!") 
+            console.error(error)
+        }
+      }
+      
+    return (
+        <div className='h-[calc(100vh-120px)] flex justify-center items-center '>
+            <div className='w-full max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
+                <h2 className='text-xl font-semibold mb-4'>Please Login</h2>
+
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className='mb-4'>
+                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="email">Email</label>
+                        <input 
+                        {...register("email", { required: true })} 
+                        type="email" name="email" id="email" placeholder='Email Address'
+                        className='shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow'
+                        />
+                    </div>
+                    <div className='mb-4'>
+                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="password">Password</label>
+                        <input 
+                        {...register("password", { required: true })} 
+                        type="password" name="password" id="password" placeholder='Password'
+                        className='shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow'
+                        />
+                    </div>
+                    {
+                        message && <p className='text-red-500 text-xs italic mb-3'>{message}</p>
+                    }
+                    <div>
+                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded focus:outline-none'>Login </button>
+                    </div>
+                </form>
+                <p className='align-baseline font-medium mt-4 text-sm'>Haven't an account? Please <Link to="/register" className='text-blue-500 hover:text-blue-700'>Register</Link></p>
+
+                {/* google sign in */}
+                <div className='mt-4'>
+                    <button 
+                    onClick={handleGoogleSignIn}
+                    className='w-full flex flex-wrap gap-1 items-center justify-center bg-secondary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none'>
+                    <FaGoogle  className='mr-2'/>
+                    Sign in with Google
+                    </button>
+                </div>
+
+                <p className='mt-5 text-center text-gray-500 text-xs'>©2025 Book Store. All rights reserved.</p>
+            </div>
+        </div>
+    )
+}
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\components\Navbar.jsx ---
+
+import { Link } from "react-router-dom";
+import { HiMiniBars3CenterLeft, HiOutlineHeart, HiOutlineShoppingCart } from "react-icons/hi2";
+import { IoSearchOutline } from "react-icons/io5";
+import { HiOutlineUser } from "react-icons/hi";
+
+import avatarImg from "../assets/avatar.png"
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useAuth } from "../context/AuthContext";
+
+const navigation = [
+    {name: "Dashboard", href:"/user-dashboard"},
+    {name: "Orders", href:"/orders"},
+    {name: "Cart Page", href:"/cart"},
+    {name: "Check Out", href:"/checkout"},
+]
+
+const Navbar = () => {
+
+    const  [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const cartItems = useSelector(state => state.cart.cartItems);
+   
+    const {currentUser, logout} = useAuth()
+    
+    const handleLogOut = () => {
+        logout()
+    }
+
+    const token = localStorage.getItem('token');
+  
+    return (
+        <header className="max-w-screen-2xl mx-auto px-4 py-6">
+            <nav className="flex justify-between items-center">
+                {/* left side */}
+                <div className="flex items-center md:gap-16 gap-4">
+                    <Link to="/">
+                        <HiMiniBars3CenterLeft className="size-6" />
+                    </Link>
+
+                    {/* search input */}
+                    <div className="relative sm:w-72 w-40 space-x-2">
+
+                        <IoSearchOutline className="absolute inline-block left-3 inset-y-2" />
+
+                        <input type="text" placeholder="Search here"
+                            className="bg-[#EAEAEA] w-full py-1 md:px-8 px-6 rounded-md focus:outline-none"
+                        />
+                    </div>
+                </div>
+
+
+                {/* rigth side */}
+                <div className="relative flex items-center md:space-x-3 space-x-2">
+                    <div >
+                        {
+                            currentUser ? <>
+                            <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                                <img src={avatarImg} alt="" className={`size-7 rounded-full ${currentUser ? 'ring-2 ring-blue-500' : ''}`} />
+                            </button>
+                            {/* show dropdowns */}
+                            {
+                                isDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40">
+                                        <ul className="py-2">
+                                            {
+                                                navigation.map((item) => (
+                                                    <li key={item.name} onClick={() => setIsDropdownOpen(false)}>
+                                                        <Link to={item.href} className="block px-4 py-2 text-sm hover:bg-gray-100">
+                                                            {item.name}
+                                                        </Link>
+                                                    </li>
+                                                ))
+                                            }
+                                            <li>
+                                                <button
+                                                onClick={handleLogOut}
+                                                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Logout</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                )
+                            }
+                            </> : token ?  <Link to="/dashboard" className='border-b-2 border-primary'>Dashboard</Link> : (
+                                <Link to="/login"> <HiOutlineUser className="size-6" /></Link>
+                            )
+                        }
+                    </div>
+                    
+                    <button className="hidden sm:block">
+                        <HiOutlineHeart className="size-6" />
+                    </button>
+
+                    <Link to="/cart" className="bg-primary p-1 sm:px-6 px-2 flex items-center rounded-sm">
+                        <HiOutlineShoppingCart className='' />
+                        {
+                            cartItems.length > 0 ?  <span className="text-sm font-semibold sm:ml-1">{cartItems.length}</span> :  <span className="text-sm font-semibold sm:ml-1">0</span>
+                        }
+                        
+                       
+                    </Link>
+                </div>
+            </nav>
+        </header>
+    )
+}
+
+export default Navbar;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\components\Register.jsx ---
+
+import React, { useState } from 'react'
+import { Link, Navigate } from 'react-router-dom'
+import { FaGoogle } from "react-icons/fa";
+import { useForm } from "react-hook-form"
+import { useAuth } from '../context/AuthContext';
+
+export const Register = () => {
+    const [message, setMessage] = useState("");
+    const {registerUser, signInWithGoogle} = useAuth();
+    // console.log(registerUser)
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+      } = useForm()
+
+    //   register user
+
+      const onSubmit = async(data) => {
+        // console.log(data)
+        try {
+            await registerUser(data.email, data.password);
+            alert("User registered successfully!")
+        } catch (error) {
+           setMessage("Please provide a valid email and password") 
+           console.error(error)
+        }
+      }
+
+      const handleGoogleSignIn = async() => {
+        try {
+            await signInWithGoogle();
+            alert("Login successful!");
+            Navigate("/");
+        } catch (error) {
+            alert("Google sign in failed!") 
+            console.error(error)
+        }
+      }
+  return (
+    <div className='h-[calc(100vh-120px)] flex justify-center items-center '>
+    <div className='w-full max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
+        <h2 className='text-xl font-semibold mb-4'>Please Register</h2>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div className='mb-4'>
+                <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="email">Email</label>
+                <input 
+                {...register("email", { required: true })} 
+                type="email" name="email" id="email" placeholder='Email Address'
+                className='shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow'
+                />
+            </div>
+            <div className='mb-4'>
+                <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="password">Password</label>
+                <input 
+                {...register("password", { required: true })} 
+                type="password" name="password" id="password" placeholder='Password'
+                className='shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow'
+                />
+            </div>
+            {
+                message && <p className='text-red-500 text-xs italic mb-3'>{message}</p>
+            }
+            <div>
+                <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded focus:outline-none'>Register</button>
+            </div>
+        </form>
+        <p className='align-baseline font-medium mt-4 text-sm'>Have an account? Please <Link to="/login" className='text-blue-500 hover:text-blue-700'>Login</Link></p>
+
+        {/* google sign in */}
+        <div className='mt-4'>
+            <button 
+            onClick={handleGoogleSignIn}
+            className='w-full flex flex-wrap gap-1 items-center justify-center bg-secondary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none'>
+            <FaGoogle  className='mr-2'/>
+            Sign in with Google
+            </button>
+        </div>
+
+        <p className='mt-5 text-center text-gray-500 text-xs'>©2025 Book Store. All rights reserved.</p>
+    </div>
+</div>
+  )
+}
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\context\AuthContext.jsx ---
+
+import {  createContext, useContext, useEffect, useState } from "react";
+import { auth } from "../firebase/firebase.config";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+
+const AuthContext =  createContext();
+
+export const useAuth = () => {
+    return useContext(AuthContext)
+}
+
+const googleProvider = new GoogleAuthProvider();
+
+// authProvider
+export const AuthProvide = ({children}) => {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    // register a user
+    const registerUser = async (email,password) => {
+
+        return await createUserWithEmailAndPassword(auth, email, password);
+    }
+
+    // login the user
+    const loginUser = async (email, password) => {
+    
+        return await signInWithEmailAndPassword(auth, email, password)
+    }
+
+    // sing up with google
+    const signInWithGoogle = async () => {
+     
+        return await signInWithPopup(auth, googleProvider)
+    }
+
+    // logout the user
+    const logout = () => {
+        return signOut(auth)
+    }
+
+    // manage user
+    useEffect(() => {
+        const unsubscribe =  onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+            setLoading(false);
+
+            if(user) {
+               
+                const {email, displayName, photoURL} = user;
+                const userData = {
+                    email, username: displayName, photo: photoURL
+                } 
+            }
+        })
+
+        return () => unsubscribe();
+    }, [])
+
+
+    const value = {
+        currentUser,
+        loading,
+        registerUser,
+        loginUser,
+        signInWithGoogle,
+        logout
+    }
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    )
+}
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\books\BookCard.jsx ---
+
+import React from 'react'
+import { FiShoppingCart } from "react-icons/fi";
+import { getImgUrl } from '../../utils/getImgUrl';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/features/cart/cartSlice';
+
+
+const BookCard = ({book}) => {
+    const dispatch = useDispatch();
+    const handleAddToCart = (product) => {
+        dispatch(addToCart(product))
+    }
+  return (
+    <div className='h-full rounded-lg transition-shadow duration-300'>
+        <div className='flex flex-col sm:flex-row gap-4 p-6 justify-center'>
+            {/* Image container */}
+            <div className='sm:w-40 h-56 flex-shrink-0'>
+                <Link to="/">
+                    <img
+                        src={`${getImgUrl(book?.coverImage)}`} 
+                        alt={book?.title} 
+                        className='w-full h-full object-cover rounded-md cursor-pointer hover:scale-105 transition-all duration-200'
+                    />
+                </Link>
+            </div>
+            
+            {/* Content container */}
+            <div className='flex flex-col w-full sm:w-52'>
+                <Link to={`/books/${book._id}`}>
+                    <h3 className='text-lg font-semibold hover:text-blue-600 mb-2 truncate'>
+                        {book.title}
+                    </h3>
+                </Link>
+                
+                <p className='text-gray-800 text-sm mb-4 line-clamp-2'>
+                    {book.description}
+                </p>
+                
+                {/* Price and button container */}
+                <div className='mt-auto'>
+                    <p className='text-lg font-medium mb-3'>
+                        ${book?.newPrice} 
+                        <span className='text-gray-500 line-through text-base ml-2'>${book?.oldPrice}</span>
+                    </p>
+                    
+                    <button 
+                    onClick={() => handleAddToCart(book)}
+                    className='w-full bg-primary text-black px-4 py-2 rounded-sm 
+                                     font-medium hover:bg-secondary
+                                     transition-all duration-200 flex items-center justify-center gap-2'>
+                        <FiShoppingCart className='text-lg'/>
+                        <span>Add to Cart</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+  )
+}
+
+export default BookCard;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\books\CartPage.jsx ---
+
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { getImgUrl } from '../../utils/getImgUrl';
+import { clearCart, removeFromCart } from '../../redux/features/cart/cartSlice';
+
+export const CartPage = () => {
+    const cartItems = useSelector(state => state.cart.cartItems);
+    const dispatch =  useDispatch();
+
+    const totalPrice =  cartItems.reduce((acc, item) => acc + item.newPrice, 0).toFixed(2);
+
+    const handleRemoveFromCart = (product) => {
+        dispatch(removeFromCart(product))
+    }
+
+    const handleClearCart  = () => {
+        dispatch(clearCart())
+    }
+    return (
+        <>
+            <div className="flex mt-12 h-full flex-col overflow-hidden bg-white shadow-xl">
+                <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                    <div className="flex items-start justify-between">
+                        <div className="text-lg font-medium text-gray-900">Shopping cart</div>
+                        <div className="ml-3 flex h-7 items-center ">
+                            <button
+                                type="button"
+                                onClick={handleClearCart }
+                                className="relative -m-2 py-1 px-2 bg-red-500 text-white rounded-md hover:bg-secondary transition-all duration-200  "
+                            >
+                                <span className="">Clear Cart</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="mt-8">
+                        <div className="flow-root">
+
+                            {
+                                cartItems.length > 0 ? (
+                                    <ul role="list" className="-my-6 divide-y divide-gray-200">
+                                        {
+                                            cartItems.map((product) => (
+                                                <li key={product?._id} className="flex py-6">
+                                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                        <img
+                                                            alt=""
+                                                            src={`${getImgUrl(product?.coverImage)}`}
+                                                            className="h-full w-full object-cover object-center"
+                                                        />
+                                                    </div>
+
+                                                    <div className="ml-4 flex flex-1 flex-col">
+                                                        <div>
+                                                            <div className="flex flex-wrap justify-between text-base font-medium text-gray-900">
+                                                                <h3>
+                                                                    <Link to='/'>{product?.title}</Link>
+                                                                </h3>
+                                                                <p className="sm:ml-4">${product?.newPrice}</p>
+                                                            </div>
+                                                            <p className="mt-1 text-sm text-gray-500 capitalize"><strong>Category: </strong>{product?.category}</p>
+                                                        </div>
+                                                        <div className="flex flex-1 flex-wrap items-end justify-between space-y-2 text-sm">
+                                                            <p className="text-gray-500"><strong>Qty:</strong> 1</p>
+
+                                                            <div className="flex">
+                                                                <button
+                                                                onClick={() => handleRemoveFromCart(product)}
+                                                                type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                                                    Remove
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            ))
+                                        }
+
+
+
+                                    </ul>
+                                ) : (<p>No product found!</p>)
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                    <div className="flex justify-between text-base font-medium text-gray-900">
+                        <p>Subtotal</p>
+                        <p>${totalPrice ? totalPrice : 0}</p>
+                    </div>
+                    <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                    <div className="mt-6">
+                        <Link
+                            to="/checkout"
+                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                        >
+                            Checkout
+                        </Link>
+                    </div>
+                    <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                        <Link to="/">
+                            or
+                            <button
+                                type="button"
+
+                                className="font-medium text-indigo-600 hover:text-indigo-500 ml-1"
+                            >
+                                Continue Shopping
+                                <span aria-hidden="true"> &rarr;</span>
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\books\CheckoutPage.jsx ---
+
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux';
+import { useForm } from "react-hook-form"
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+import Swal from'sweetalert2';
+import { useCreateOrderMutation } from '../../redux/features/orders/ordersApi';
+
+export const CheckoutPage = () => {
+    const cartItems = useSelector(state => state.cart.cartItems);
+    const totalPrice = cartItems.reduce((acc, item) => acc + item.newPrice, 0).toFixed(2);
+    const {  currentUser} = useAuth();
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm()
+
+    const [createOrder, {isLoading, error}] = useCreateOrderMutation();
+    const navigate =  useNavigate()
+
+    const [isChecked, setIsChecked] = useState(false)
+    const onSubmit = async (data) => {
+     
+        const newOrder = {
+            name: data.name,
+            email: currentUser?.email,
+            address: {
+                city: data.city,
+                country: data.country,
+                state: data.state,
+                zipcode: data.zipcode
+        
+            },
+            phone: data.phone,
+            productIds: cartItems.map(item => item?._id),
+            totalPrice: totalPrice,
+        }
+        
+        try {
+            await createOrder(newOrder).unwrap();
+            Swal.fire({
+                title: "Confirmed Order",
+                text: "Your order placed successfully!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, It's Okay!"
+              });
+              navigate("/orders")
+        } catch (error) {
+            console.error("Error place an order", error);
+            alert("Failed to place an order")
+        }
+    }
+
+    if(isLoading) return <div>Loading....</div>
+    return (
+        <section>
+            <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+                <div className="container max-w-screen-lg mx-auto">
+                    <div>
+                        <div>
+                            <h2 className="font-semibold text-xl text-gray-600 mb-2">Cash On Delevary</h2>
+                            <p className="text-gray-500 mb-2">Total Price: ${totalPrice}</p>
+                            <p className="text-gray-500 mb-6">Items: {cartItems.length > 0 ? cartItems.length : 0}</p>
+                        </div>
+
+                        
+                            <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+                                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3 my-8">
+                                    <div className="text-gray-600">
+                                        <p className="font-medium text-lg">Personal Details</p>
+                                        <p>Please fill out all the fields.</p>
+                                    </div>
+
+                                    <div className="lg:col-span-2">
+                                        <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+                                            <div className="md:col-span-5">
+                                                <label htmlFor="full_name">Full Name</label>
+                                                <input
+                                                    {...register("name", { required: true })}
+                                                    type="text" name="name" id="name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" />
+                                            </div>
+
+                                            <div className="md:col-span-5">
+                                                <label html="email">Email Address</label>
+                                                <input
+
+                                                    type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                                    disabled
+                                                    defaultValue={currentUser?.email}
+                                                    placeholder="email@domain.com" />
+                                            </div>
+                                            <div className="md:col-span-5">
+                                                <label html="phone">Phone Number</label>
+                                                <input
+                                                    {...register("phone", { required: true })}
+                                                    type="number" name="phone" id="phone" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="+123 456 7890" />
+                                            </div>
+
+                                            <div className="md:col-span-3">
+                                                <label htmlFor="address">Address / Street</label>
+                                                <input
+                                                    {...register("address", { required: true })}
+                                                    type="text" name="address" id="address" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" />
+                                            </div>
+
+                                            <div className="md:col-span-2">
+                                                <label htmlFor="city">City</label>
+                                                <input
+                                                    {...register("city", { required: true })}
+                                                    type="text" name="city" id="city" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" />
+                                            </div>
+
+                                            <div className="md:col-span-2">
+                                                <label htmlFor="country">Country / region</label>
+                                                <div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
+                                                    <input
+                                                        {...register("country", { required: true })}
+                                                        name="country" id="country" placeholder="Country" className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent" />
+                                                    <button tabIndex="-1" className="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-red-600">
+                                                        <svg className="w-4 h-4 mx-2 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                    </button>
+                                                    <button tabIndex="-1" className="cursor-pointer outline-none focus:outline-none border-l border-gray-200 transition-all text-gray-300 hover:text-blue-600">
+                                                        <svg className="w-4 h-4 mx-2 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="md:col-span-2">
+                                                <label htmlFor="state">State / province</label>
+                                                <div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
+                                                    <input
+                                                        {...register("state", { required: true })}
+                                                        name="state" id="state" placeholder="State" className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent" />
+                                                    <button className="cursor-pointer outline-none focus:outline-none transition-all text-gray-300 hover:text-red-600">
+                                                        <svg className="w-4 h-4 mx-2 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                    </button>
+                                                    <button tabIndex="-1" className="cursor-pointer outline-none focus:outline-none border-l border-gray-200 transition-all text-gray-300 hover:text-blue-600">
+                                                        <svg className="w-4 h-4 mx-2 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="md:col-span-1">
+                                                <label htmlFor="zipcode">Zipcode</label>
+                                                <input
+                                                    {...register("zipcode", { required: true })}
+                                                    type="text" name="zipcode" id="zipcode" className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" />
+                                            </div>
+
+                                            <div className="md:col-span-5 mt-3">
+                                                <div className="inline-flex items-center">
+                                                    <input
+                                                        onChange={(e) => setIsChecked(e.target.checked)}
+                                                        type="checkbox" name="billing_same" id="billing_same" className="form-checkbox" />
+                                                    <label htmlFor="billing_same" className="ml-2 ">I am aggree to the <Link className='underline underline-offset-2 text-blue-600'>Terms & Conditions</Link> and <Link className='underline underline-offset-2 text-blue-600'>Shoping Policy.</Link></label>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div className="md:col-span-5 text-right">
+                                                <div className="inline-flex items-end">
+                                                    <button
+                                                        disabled={!isChecked}
+                                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Place an Order</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+    )
+}
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\books\OrderPage.jsx ---
+
+import React from 'react'
+import { useGetOrderByEmailQuery } from '../../redux/features/orders/ordersApi'
+import { useAuth } from '../../context/AuthContext';
+
+const OrderPage = () => {
+    const { currentUser} = useAuth()
+
+
+    const { data: orders = [], isLoading, isError } = useGetOrderByEmailQuery(currentUser.email);
+    if (isLoading) return <div>Loading...</div>
+    if (isError) return <div>Error geting orders data</div>
+    return (
+        <div className='container mx-auto p-6'>
+            <h2 className='text-2xl font-semibold mb-4'>Your Orders</h2>
+            {
+                orders.length === 0 ? (<div>No orders found!</div>) : (<div>
+                    {
+                        orders.map((order, index) => (
+                            <div key={order._id} className="border-b mb-4 pb-4">
+                                <p className='p-1 bg-secondary text-white w-10 rounded mb-1'># {index + 1}</p>
+                                <h2 className="font-bold">Order ID: {order._id}</h2>
+                                <p className="text-gray-600">Name: {order.name}</p>
+                                <p className="text-gray-600">Email: {order.email}</p>
+                                <p className="text-gray-600">Phone: {order.phone}</p>
+                                <p className="text-gray-600">Total Price: ${order.totalPrice}</p>
+                                <h3 className="font-semibold mt-2">Address:</h3>
+                                <p> {order.address.city}, {order.address.state}, {order.address.country}, {order.address.zipcode}</p>
+                                <h3 className="font-semibold mt-2">Products Id:</h3>
+                                <ul>
+                                    {order.productIds.map((productId) => (
+                                        <li key={productId}>{productId}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))
+                    }
+                </div>)
+            }
+        </div>
+    )
+}
+
+export default OrderPage
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\books\SingleBook.jsx ---
+
+import React from 'react'
+import { FiShoppingCart } from "react-icons/fi"
+import { useParams } from "react-router-dom"
+
+import { getImgUrl } from '../../utils/getImgUrl';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/features/cart/cartSlice';
+import { useFetchBookByIdQuery } from '../../redux/features/books/booksApi';
+
+export const SingleBook = () => {
+    const {id} = useParams();
+    const {data: book, isLoading, isError} = useFetchBookByIdQuery(id);
+
+    const dispatch =  useDispatch();
+
+    const handleAddToCart = (product) => {
+        dispatch(addToCart(product))
+    }
+
+    if(isLoading) return <div>Loading...</div>
+    if(isError) return <div>Error happending to load book info</div>
+  return (
+    <div className="max-w-lg shadow-md p-5">
+            <h1 className="text-2xl font-bold mb-6">{book.title}</h1>
+
+            <div className=''>
+                <div>
+                    <img
+                        src={`${getImgUrl(book.coverImage)}`}
+                        alt={book.title}
+                        className="mb-8"
+                    />
+                </div>
+
+                <div className='mb-5'>
+                    <p className="text-gray-700 mb-2"><strong>Author:</strong> {book.author || 'admin'}</p>
+                    <p className="text-gray-700 mb-4">
+                        <strong>Published:</strong> {new Date(book?.createdAt).toLocaleDateString()}
+                    </p>
+                    <p className="text-gray-700 mb-4 capitalize">
+                        <strong>Category:</strong> {book?.category}
+                    </p>
+                    <p className="text-gray-700"><strong>Description:</strong> {book.description}</p>
+                </div>
+
+                <button onClick={() => handleAddToCart(book)} className="btn-primary px-6 space-x-1 flex items-center gap-1 ">
+                    <FiShoppingCart className="" />
+                    <span>Add to Cart</span>
+
+                </button>
+            </div>
+        </div>
+  )
+}
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\Dashboard.jsx ---
+
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import Loading from '../../components/Loading';
+import getBaseUrl from '../../utils/baseURL';
+import { MdIncompleteCircle } from 'react-icons/md'
+import RevenueChart from './RevenueChart';
+
+const Dashboard = () => {
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState({});
+    // console.log(data)
+    const navigate = useNavigate()
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response =  await axios.get(`${getBaseUrl()}/api/admin`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                })
+
+                setData(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        fetchData();
+    }, []);
+
+    // console.log(data)
+
+    if(loading) return <Loading/>
+
+  return (
+    <>
+     <section className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+              <div className="flex items-center p-8 bg-white shadow rounded-lg">
+                <div className="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-purple-600 bg-purple-100 rounded-full mr-6">
+                <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="block text-2xl font-bold">{data?.totalBooks}</span>
+                  <span className="block text-gray-500">Products</span>
+                </div>
+              </div>
+              <div className="flex items-center p-8 bg-white shadow rounded-lg">
+                <div className="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-green-600 bg-green-100 rounded-full mr-6">
+                  <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="block text-2xl font-bold">${data?.totalSales}</span>
+                  <span className="block text-gray-500">Total Sales</span>
+                </div>
+              </div>
+              <div className="flex items-center p-8 bg-white shadow rounded-lg">
+                <div className="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-red-600 bg-red-100 rounded-full mr-6">
+                  <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="inline-block text-2xl font-bold">{data?.trendingBooks}</span>
+                  <span className="inline-block text-xl text-gray-500 font-semibold">(13%)</span>
+                  <span className="block text-gray-500">Trending Books in This Month</span>
+                </div>
+              </div>
+              <div className="flex items-center p-8 bg-white shadow rounded-lg">
+                <div className="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-blue-600 bg-blue-100 rounded-full mr-6">
+                <MdIncompleteCircle className='size-6'/>
+                </div>
+                <div>
+                  <span className="block text-2xl font-bold">{data?.totalOrders}</span>
+                  <span className="block text-gray-500">Total Orders</span>
+                </div>
+              </div>
+            </section>
+            <section className="grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-6">
+              <div className="flex flex-col md:col-span-2 md:row-span-2 bg-white shadow rounded-lg">
+                <div className="px-6 py-5 font-semibold border-b border-gray-100">The number of orders per month</div>
+                <div className="p-4 flex-grow">
+                  <div className="flex items-center justify-center h-full px-4 py-16 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">
+                  <RevenueChart />
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center p-8 bg-white shadow rounded-lg">
+                <div className="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-yellow-600 bg-yellow-100 rounded-full mr-6">
+                  <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                    <path fill="#fff" d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path fill="#fff" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="block text-2xl font-bold">02</span>
+                  <span className="block text-gray-500">Orders left</span>
+                </div>
+              </div>
+              <div className="flex items-center p-8 bg-white shadow rounded-lg">
+                <div className="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-teal-600 bg-teal-100 rounded-full mr-6">
+                  <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="block text-2xl font-bold">139</span>
+                  <span className="block text-gray-500">Website visits (last day)</span>
+                </div>
+              </div>
+              <div className="row-span-3 bg-white shadow rounded-lg">
+                <div className="flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">
+                  <span>Users by average order</span>
+                  <button type="button" className="inline-flex justify-center rounded-md px-1 -mr-1 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-600" id="options-menu" aria-haspopup="true" aria-expanded="true">
+                    Descending
+                    <svg className="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+    
+                </div>
+                <div className="overflow-y-auto" style={{maxHeight: '24rem'}}>
+                  <ul className="p-6 space-y-6">
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/women/82.jpg" alt="Annette Watson profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Annette Watson</span>
+                      <span className="ml-auto font-semibold">9.3</span>
+                    </li>
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/men/81.jpg" alt="Calvin Steward profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Calvin Steward</span>
+                      <span className="ml-auto font-semibold">8.9</span>
+                    </li>
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/men/80.jpg" alt="Ralph Richards profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Ralph Richards</span>
+                      <span className="ml-auto font-semibold">8.7</span>
+                    </li>
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/men/79.jpg" alt="Bernard Murphy profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Bernard Murphy</span>
+                      <span className="ml-auto font-semibold">8.2</span>
+                    </li>
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/women/78.jpg" alt="Arlene Robertson profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Arlene Robertson</span>
+                      <span className="ml-auto font-semibold">8.2</span>
+                    </li>
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/women/77.jpg" alt="Jane Lane profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Jane Lane</span>
+                      <span className="ml-auto font-semibold">8.1</span>
+                    </li>
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/men/76.jpg" alt="Pat Mckinney profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Pat Mckinney</span>
+                      <span className="ml-auto font-semibold">7.9</span>
+                    </li>
+                    <li className="flex items-center">
+                      <div className="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Norman Walters profile picture"/>
+                      </div>
+                      <span className="text-gray-600">Norman Walters</span>
+                      <span className="ml-auto font-semibold">7.7</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="flex flex-col row-span-3 bg-white shadow rounded-lg">
+                <div className="px-6 py-5 font-semibold border-b border-gray-100">Students by type of studying</div>
+                <div className="p-4 flex-grow">
+                  <div className="flex items-center justify-center h-full px-4 py-24 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">Chart</div>
+                </div>
+              </div>
+            </section>
+            <section className="text-right font-semibold text-gray-500">
+              <a href="#" className="text-purple-600 hover:underline">Recreated on Codepen</a> with <a href="https://tailwindcss.com/" className="text-teal-400 hover:underline">Tailwind CSS</a> by Azri Kahar, <a href="https://dribbble.com/shots/10711741-Free-UI-Kit-for-Figma-Online-Courses-Dashboard" className="text-purple-600 hover:underline">original design</a> made by Chili Labs
+            </section>
+    </>
+  )
+}
+
+export default Dashboard
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\DashboardLayout.jsx ---
+
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+
+import Loading from '../../components/Loading';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { HiViewGridAdd } from "react-icons/hi";
+import { MdOutlineManageHistory } from "react-icons/md";
+
+const DashboardLayout = () => {
+  
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate("/")
+  }
+
+  return (
+    <section className="flex md:bg-gray-100 min-h-screen overflow-hidden">
+    <aside className="hidden sm:flex sm:flex-col">
+      <a href="/" className="inline-flex items-center justify-center h-20 w-20 bg-purple-600 hover:bg-purple-500 focus:bg-purple-500">
+        <img src="/fav-icon.png" alt="" />
+      </a>
+      <div className="flex-grow flex flex-col justify-between text-gray-500 bg-gray-800">
+        <nav className="flex flex-col mx-4 my-6 space-y-4">
+          <a href="#" className="inline-flex items-center justify-center py-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg">
+            <span className="sr-only">Folders</span>
+            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+            </svg>
+          </a>
+          <Link to="/dashboard" className="inline-flex items-center justify-center py-3 text-purple-600 bg-white rounded-lg">
+            <span className="sr-only">Dashboard</span>
+            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </Link>
+          <Link to="/dashboard/add-new-book" className="inline-flex items-center justify-center py-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg">
+            <span className="sr-only">Add Book</span>
+            <HiViewGridAdd className="h-6 w-6"/>
+          </Link>
+          <Link to="/dashboard/manage-books" className="inline-flex items-center justify-center py-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg">
+            <span className="sr-only">Documents</span>
+            <MdOutlineManageHistory className="h-6 w-6"/>
+          </Link>
+        </nav>
+        <div className="inline-flex items-center justify-center h-20 w-20 border-t border-gray-700">
+          <button className="p-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg">
+            <span className="sr-only">Settings</span>
+            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <div className="flex-grow text-gray-800">
+      <header className="flex items-center h-20 px-6 sm:px-10 bg-white">
+        <button className="block sm:hidden relative flex-shrink-0 p-2 mr-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:bg-gray-100 focus:text-gray-800 rounded-full">
+          <span className="sr-only">Menu</span>
+            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" />
+          </svg>
+        </button>
+        <div className="relative w-full max-w-md sm:-ml-2">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className="absolute h-6 w-6 mt-2.5 ml-2 text-gray-400">
+            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+          </svg>
+          <input type="text" role="search" placeholder="Search..." className="py-2 pl-10 pr-4 w-full border-4 border-transparent placeholder-gray-400 focus:bg-gray-50 rounded-lg" />
+        </div>
+        <div className="flex flex-shrink-0 items-center ml-auto">
+          <button className="inline-flex items-center p-2 hover:bg-gray-100 focus:bg-gray-100 rounded-lg">
+            <span className="sr-only">User Menu</span>
+            <div className="hidden md:flex md:flex-col md:items-end md:leading-tight">
+              <span className="font-semibold">Yaniv Shahar</span>
+              <span className="text-sm text-gray-600">Admin</span>
+            </div>
+            <span className="h-12 w-12 ml-2 sm:ml-3 mr-2 bg-gray-100 rounded-full overflow-hidden">
+              <img src="https://randomuser.me/api/portraits/man/8.jpg" alt="user profile photo" className="h-full w-full object-cover"/>
+            </span>
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className="hidden sm:block h-6 w-6 text-gray-300">
+              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg> 
+          </button>
+          <div className="border-l pl-3 ml-3 space-x-1">
+            <button className="relative p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:bg-gray-100 focus:text-gray-600 rounded-full">
+              <span className="sr-only">Notifications</span>
+              <span className="absolute top-0 right-0 h-2 w-2 mt-1 mr-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-0 right-0 h-2 w-2 mt-1 mr-2 bg-red-500 rounded-full animate-ping"></span>
+              <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </button>
+            <button
+            onClick={handleLogout}
+            className="relative p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:bg-gray-100 focus:text-gray-600 rounded-full">
+              <span className="sr-only">Log out</span>
+              <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+  </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+      <main className="p-6 sm:p-10 space-y-6 ">
+        <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between">
+          <div className="mr-6">
+            <h1 className="text-4xl font-semibold mb-2">Dashboard</h1>
+            <h2 className="text-gray-600 ml-0.5">Book Store Inventory</h2>
+          </div>
+          <div className="flex flex-col md:flex-row items-start justify-end -mb-3">
+            <Link to="/dashboard/manage-books" className="inline-flex px-5 py-3 text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:bg-purple-100 focus:bg-purple-100 border border-purple-600 rounded-md mb-3">
+              <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="flex-shrink-0 h-5 w-5 -ml-1 mt-0.5 mr-2">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+              Manage Books
+            </Link>
+            <Link to="/dashboard/add-new-book" className="inline-flex px-5 py-3 text-white bg-purple-600 hover:bg-purple-700 focus:bg-purple-700 rounded-md ml-6 mb-3">
+              <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="flex-shrink-0 h-6 w-6 text-white -ml-1 mr-2">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add New Book
+            </Link>
+          </div>
+        </div>
+       <Outlet/>
+      </main>
+    </div>
+  </section>
+  )
+}
+
+export default DashboardLayout
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\RevenueChart.jsx ---
+
+// src/components/RevenueChart.jsx
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const RevenueChart = () => {
+
+
+
+
+  const revenueData = [500, 700, 800, 600, 750, 900, 650, 870, 960, 1020, 1100, 1150];;
+
+  const data = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    datasets: [
+      {
+        label: 'Revenue (USD)',
+        data: revenueData,
+        backgroundColor: 'rgba(34, 197, 94, 0.7)', 
+        borderColor: 'rgba(34, 197, 94, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Monthly Revenue',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
+  return (
+    <div className="w-full max-w-3xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+      <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">Monthly Revenue</h2>
+      <div className='hidden md:block'>
+      <Bar data={data} options={options} className='' />
+      </div>
+    </div>
+  );
+};
+
+export default RevenueChart;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\addBook\AddBook.jsx ---
+
+import React, { useState } from 'react'
+import InputField from './InputField'
+import SelectField from './SelectField'
+import { useForm } from 'react-hook-form';
+import { useAddBookMutation } from '../../../redux/features/books/booksApi';
+import Swal from 'sweetalert2';
+
+const AddBook = () => {
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const [imageFile, setimageFile] = useState(null);
+    const [addBook, {isLoading, isError}] = useAddBookMutation()
+    const [imageFileName, setimageFileName] = useState('')
+    const onSubmit = async (data) => {
+ 
+        const newBookData = {
+            ...data,
+            coverImage: imageFileName
+        }
+        try {
+            await addBook(newBookData).unwrap();
+            Swal.fire({
+                title: "Book added",
+                text: "Your book is uploaded successfully!",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, It's Okay!"
+              });
+              reset();
+              setimageFileName('')
+              setimageFile(null);
+        } catch (error) {
+            console.error(error);
+            alert("Failed to add book. Please try again.")   
+        }
+      
+    }
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if(file) {
+            setimageFile(file);
+            setimageFileName(file.name);
+        }
+    }
+  return (
+    <div className="max-w-lg   mx-auto md:p-6 p-3 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Add New Book</h2>
+
+      {/* Form starts here */}
+      <form onSubmit={handleSubmit(onSubmit)} className=''>
+        {/* Reusable Input Field for Title */}
+        <InputField
+          label="Title"
+          name="title"
+          placeholder="Enter book title"
+          register={register}
+        />
+
+        {/* Reusable Textarea for Description */}
+        <InputField
+          label="Description"
+          name="description"
+          placeholder="Enter book description"
+          type="textarea"
+          register={register}
+
+        />
+
+        {/* Reusable Select Field for Category */}
+        <SelectField
+          label="Category"
+          name="category"
+          options={[
+            { value: '', label: 'Choose A Category' },
+            { value: 'business', label: 'Business' },
+            { value: 'technology', label: 'Technology' },
+            { value: 'fiction', label: 'Fiction' },
+            { value: 'horror', label: 'Horror' },
+            { value: 'adventure', label: 'Adventure' },
+            // Add more options as needed
+          ]}
+          register={register}
+        />
+
+        {/* Trending Checkbox */}
+        <div className="mb-4">
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              {...register('trending')}
+              className="rounded text-blue-600 focus:ring focus:ring-offset-2 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm font-semibold text-gray-700">Trending</span>
+          </label>
+        </div>
+
+        {/* Old Price */}
+        <InputField
+          label="Old Price"
+          name="oldPrice"
+          type="number"
+          placeholder="Old Price"
+          register={register}
+         
+        />
+
+        {/* New Price */}
+        <InputField
+          label="New Price"
+          name="newPrice"
+          type="number"
+          placeholder="New Price"
+          register={register}
+          
+        />
+
+        {/* Cover Image Upload */}
+        <div className="mb-4">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Cover Image</label>
+          <input type="file" accept="image/*" onChange={handleFileChange} className="mb-2 w-full" />
+          {imageFileName && <p className="text-sm text-gray-500">Selected: {imageFileName}</p>}
+        </div>
+
+        {/* Submit Button */}
+        <button type="submit" className="w-full py-2 bg-green-500 text-white font-bold rounded-md">
+         {
+            isLoading ? <span className="">Adding.. </span> : <span>Add Book</span>
+          }
+        </button>
+      </form>
+    </div>
+  )
+}
+
+export default AddBook
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\addBook\InputField.jsx ---
+
+import React from 'react';
+
+const InputField = ({ label, name, type = 'text', register, placeholder }) => {
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-semibold text-gray-700">{label}</label>
+      <input
+        type={type}
+        {...register(name,  { required: true })}
+        className=" p-2 border w-full rounded-md focus:outline-none focus:ring focus:border-blue-300"
+        placeholder={placeholder}
+      />
+    </div>
+  );
+};
+
+export default InputField;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\addBook\SelectField.jsx ---
+
+import React from 'react';
+
+const SelectField = ({ label, name, options, register }) => {
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-semibold text-gray-700">{label}</label>
+      <select
+        {...register(name,  { required: true })}
+        className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+export default SelectField;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\editBook\UpdateBook.jsx ---
+
+import React, { useEffect } from 'react'
+import InputField from '../addBook/InputField'
+import SelectField from '../addBook/SelectField'
+import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
+import { useFetchBookByIdQuery, useUpdateBookMutation } from '../../../redux/features/books/booksApi';
+import Loading from '../../../components/Loading';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import getBaseUrl from '../../../utils/baseURL';
+
+const UpdateBook = () => {
+  const { id } = useParams();
+  const { data: bookData, isLoading, isError, refetch } = useFetchBookByIdQuery(id);
+  // console.log(bookData)
+  const [updateBook] = useUpdateBookMutation();
+  const { register, handleSubmit, setValue, reset } = useForm();
+  useEffect(() => {
+    if (bookData) {
+      setValue('title', bookData.title);
+      setValue('description', bookData.description);
+      setValue('category', bookData?.category);
+      setValue('trending', bookData.trending);
+      setValue('oldPrice', bookData.oldPrice);
+      setValue('newPrice', bookData.newPrice);
+      setValue('coverImage', bookData.coverImage)
+    }
+  }, [bookData, setValue])
+
+  const onSubmit = async (data) => {
+    const updateBookData = {
+      title: data.title,
+      description: data.description,
+      category: data.category,
+      trending: data.trending,
+      oldPrice: Number(data.oldPrice),
+      newPrice: Number(data.newPrice),
+      coverImage: data.coverImage || bookData.coverImage,
+    };
+    try {
+      await axios.put(`${getBaseUrl()}/api/books/edit/${id}`, updateBookData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      Swal.fire({
+        title: "Book Updated",
+        text: "Your book is updated successfully!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, It's Okay!"
+      });
+      await refetch()
+    } catch (error) {
+      console.log("Failed to update book.");
+      alert("Failed to update book.");
+    }
+  }
+  if (isLoading) return <Loading />
+  if (isError) return <div>Error fetching book data</div>
+  return (
+    <div className="max-w-lg mx-auto md:p-6 p-3 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Update Book</h2>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <InputField
+          label="Title"
+          name="title"
+          placeholder="Enter book title"
+          register={register}
+        />
+
+        <InputField
+          label="Description"
+          name="description"
+          placeholder="Enter book description"
+          type="textarea"
+          register={register}
+        />
+
+        <SelectField
+          label="Category"
+          name="category"
+          options={[
+            { value: '', label: 'Choose A Category' },
+            { value: 'business', label: 'Business' },
+            { value: 'technology', label: 'Technology' },
+            { value: 'fiction', label: 'Fiction' },
+            { value: 'horror', label: 'Horror' },
+            { value: 'adventure', label: 'Adventure' },
+          ]}
+          register={register}
+        />
+        <div className="mb-4">
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              {...register('trending')}
+              className="rounded text-blue-600 focus:ring focus:ring-offset-2 focus:ring-blue-500"
+            />
+            <span className="ml-2 text-sm font-semibold text-gray-700">Trending</span>
+          </label>
+        </div>
+
+        <InputField
+          label="Old Price"
+          name="oldPrice"
+          type="number"
+          placeholder="Old Price"
+          register={register}
+        />
+
+        <InputField
+          label="New Price"
+          name="newPrice"
+          type="number"
+          placeholder="New Price"
+          register={register}
+        />
+
+        <InputField
+          label="Cover Image URL"
+          name="coverImage"
+          type="text"
+          placeholder="Cover Image URL"
+          register={register}
+        />
+
+        <button type="submit" className="w-full py-2 bg-blue-500 text-white font-bold rounded-md">
+          Update Book
+        </button>
+      </form>
+    </div>
+  )
+}
+
+export default UpdateBook
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\manageBooks\ManageBooks.jsx ---
+
+import React from 'react'
+import { useDeleteBookMutation, useFetchAllBooksQuery } from '../../../redux/features/books/booksApi';
+import { Link, useNavigate } from 'react-router-dom';
+
+const ManageBooks = () => {
+    const navigate = useNavigate();
+
+    const {data: books, refetch} = useFetchAllBooksQuery()
+
+    const [deleteBook] = useDeleteBookMutation()
+
+    // Handle deleting a book
+    const handleDeleteBook = async (id) => {
+        try {
+            await deleteBook(id).unwrap();
+            alert('Book deleted successfully!');
+            refetch();
+
+        } catch (error) {
+            console.error('Failed to delete book:', error.message);
+            alert('Failed to delete book. Please try again.');
+        }
+    };
+
+    // Handle navigating to Edit Book page
+    const handleEditClick = (id) => {
+        navigate(`dashboard/edit-book/${id}`);
+    };
+  return (
+    <section className="py-1 bg-blueGray-50">
+    <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4 mx-auto mt-24">
+        <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded ">
+            <div className="rounded-t mb-0 px-4 py-3 border-0">
+                <div className="flex flex-wrap items-center">
+                    <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+                        <h3 className="font-semibold text-base text-blueGray-700">All Books</h3>
+                    </div>
+                    <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
+                        <button className="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">See all</button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="block w-full overflow-x-auto">
+                <table className="items-center bg-transparent w-full border-collapse ">
+                    <thead>
+                        <tr>
+                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                #
+                            </th>
+                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Book Title
+                            </th>
+                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Category
+                            </th>
+                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Price
+                            </th>
+                            <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {
+                            books && books.map((book, index) => (
+                                <tr key={index}>
+                                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
+                                   {index + 1}
+                                </th>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
+                                    {book.title}
+                                </td>
+                                <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                  {book.category}
+                                </td>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+
+                                    ${book.newPrice}
+                                </td>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 space-x-4">
+
+                                    <Link to={`/dashboard/edit-book/${book._id}`} className="font-medium text-indigo-600 hover:text-indigo-700 mr-2 hover:underline underline-offset-2">
+                                        Edit
+                                    </Link>
+                                    <button 
+                                    onClick={() => handleDeleteBook(book._id)}
+                                    className="font-medium bg-red-500 py-1 px-4 rounded-full text-white mr-2">Delete</button>
+                                </td>
+                            </tr> 
+                            ))
+                        }
+         
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</section>
+  )
+}
+
+export default ManageBooks
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\dashboard\users\UserDashboard.jsx ---
+
+import React from 'react';
+import { useAuth } from '../../../context/AuthContext';
+import { useGetOrderByEmailQuery } from '../../../redux/features/orders/ordersApi';
+
+const UserDashboard = () => {
+    const { currentUser } = useAuth();
+    const { data: orders = [], isLoading, isError } = useGetOrderByEmailQuery(currentUser?.email);
+
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error getting orders data</div>;
+
+    return (
+        <div className=" bg-gray-100 py-16">
+            <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+                <h1 className="text-2xl font-bold mb-4">User Dashboard</h1>
+                <p className="text-gray-700 mb-6">Welcome, {currentUser?.name || 'User'}! Here are your recent orders:</p>
+
+                <div className="mt-6">
+                    <h2 className="text-xl font-semibold mb-4">Your Orders</h2>
+                    {orders.length > 0 ? (
+                        <ul className="space-y-4">
+                            {orders.map((order) => (
+                                <li key={order._id} className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-1">
+                                    <p className="font-medium">Order ID: {order._id}</p>
+                                    <p>Date: {new Date(order?.createdAt).toLocaleDateString()}</p>
+                                    <p >Total: ${order.totalPrice}</p>
+                                    {order.productIds.map((productId) => (
+                                        <p key={productId} className='ml-1'>{productId}</p>
+                                    ))}
+                                </li>
+
+
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-gray-600">You have no recent orders.</p>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default UserDashboard;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\home\Banner.jsx ---
+
+import React from 'react'
+import bannerImg from '../../assets/banner.png'
+
+
+const Banner = () => {
+  return (
+    <div className='flex flex-col md:flex-row-reverse py-16 justify-between items-center gap-12'>
+
+        <div className='md:w-1/2 w-full flex items-center md:justify-end' >
+            <img src={bannerImg} alt="" />
+        </div>
+
+        <div className='md:w-1/2 w-full'>
+            <h1 className='md:text-5xl text-2xl font-medium mb-7'>some text </h1>
+            <p className='mb-10'> 
+                bla basdsala bla some text lore bla bla some text lor bla bla some text
+                lor bla bla some text lor bla bla some text lor bla bla some text lor
+                bla bla some text lor bla bla some text lor bla bla some text lor bla bla 
+                some text lor bla bla some text lorm input
+            </p>
+
+            <button className='btn-primary'>Subscribe</button>
+
+        </div>
+
+       
+       
+    </div>
+  )
+}
+export default Banner;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\home\Home.jsx ---
+
+import React from 'react'
+import Banner from './Banner'
+import TopSellers from './TopSellers'
+import Recommended  from './Recommended'
+import News from './News'
+
+export const Home = () => {
+  return (
+    <div>
+        <Banner/>
+        <TopSellers/>
+        <Recommended/>
+        <News/>
+    </div>
+  )
+}
+
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\home\News.jsx ---
+
+import React from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { Pagination, Navigation } from 'swiper/modules';
+
+import news1 from "../../assets/news/news-1.png"
+import news2 from "../../assets/news/news-2.png"
+import news3 from "../../assets/news/news-3.png"
+import news4 from "../../assets/news/news-4.png"
+import { Link } from 'react-router-dom';
+
+const news = [
+    {
+        "id": 1,
+        "title": "Global Climate Summit Calls for Urgent Action",
+        "description": "World leaders gather at the Global Climate Summit to discuss urgent strategies to combat climate change, focusing on reducing carbon emissions and fostering renewable energy solutions.",
+        "image": news1
+    },
+    {
+        "id": 2,
+        "title": "Breakthrough in AI Technology Announced",
+        "description": "A major breakthrough in artificial intelligence has been announced by researchers, with new advancements promising to revolutionize industries from healthcare to finance.",
+        "image": news2
+    },
+    {
+        "id": 3,
+        "title": "New Space Mission Aims to Explore Distant Galaxies",
+        "description": "NASA has unveiled plans for a new space mission that will aim to explore distant galaxies, with hopes of uncovering insights into the origins of the universe.",
+        "image": news3
+    },
+    {
+        "id": 4,
+        "title": "Stock Markets Reach Record Highs Amid Economic Recovery",
+        "description": "Global stock markets have reached record highs as signs of economic recovery continue to emerge following the challenges posed by the global pandemic.",
+        "image": news4
+    },
+    {
+        "id": 5,
+        "title": "Innovative New Smartphone Released by Leading Tech Company",
+        "description": "A leading tech company has released its latest smartphone model, featuring cutting-edge technology, improved battery life, and a sleek new design.",
+        "image": news2
+    }
+]
+
+
+
+const News = () => {
+  return (
+    <div className='py-16'>
+        <h2 className='text-3xl font-semibold mb-6'>News </h2>
+
+        <Swiper
+            slidesPerView={1}
+            spaceBetween={30}
+            navigation={true}
+            breakpoints={{
+                640: {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 40,
+                },
+                1024: {
+                    slidesPerView: 2,
+                    spaceBetween: 50,
+                },
+            }}
+            modules={[Pagination, Navigation]}
+            className="mySwiper"
+        >
+            {
+                news.map((item, index) => (
+                    <SwiperSlide key={index}>
+                        <div className='flex flex-col sm:flex-row sm:justify-between items-center gap-12'>
+                            {/* content */}
+                            <div className='py-4'>
+                                <Link to="/">
+                                    <h3 className='text-lg font-medium hover:text-blue-500 mb-4'>{item.title}</h3>
+                                </Link>
+                                <div className='w-12 h-[4px] bg-primary mb-5'></div>
+                                <p className='text-sm text-gray-600'>{item.description}</p>
+                            </div>
+
+                            <div className='flex-shrink-0'>
+                                <img src={item.image} alt=""  className='w-full object-cover'/>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                ) )
+            }
+      </Swiper>
+    </div>
+  )
+}
+export default News;
+
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\home\Recommended.jsx ---
+
+import React, { useEffect, useState } from 'react'
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// import required modules
+import { Pagination, Navigation } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import BookCard from '../books/BookCard';
+import { useFetchAllBooksQuery } from '../../redux/features/books/booksApi';
+
+
+const Recommened = () => {
+   
+
+    const {data: books = []} = useFetchAllBooksQuery();
+
+    useEffect(()=>{
+        console.log(`Recommened books: ${books}`);
+
+    },[books])
+  return (
+    <div className='py-16'>
+         <h2 className='text-3xl font-semibold mb-6'>Recommended for you </h2>
+
+
+         <Swiper
+                slidesPerView={1}
+                spaceBetween={30}
+                navigation={true}
+                breakpoints={{
+                    640: {
+                        slidesPerView: 1,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 40,
+                    },
+                    1024: {
+                        slidesPerView: 2,
+                        spaceBetween: 50,
+                    },
+                    1180: {
+                        slidesPerView: 3,
+                        spaceBetween: 50,
+                    }
+                }}
+                modules={[Pagination, Navigation]}
+                className="mySwiper"
+            >
+
+                {
+                   books.length > 0 && books.slice(5, 18).map((book, index) => (
+                        <SwiperSlide key={index}>
+                            <BookCard  book={book} />
+                        </SwiperSlide>
+                    ))
+                }
+
+
+
+            </Swiper>
+    </div>
+  )
+}
+
+export default Recommened
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\pages\home\TopSellers.jsx ---
+
+import React, { useEffect, useState } from 'react'
+import BookCard from '../books/BookCard';
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// import required modules
+import { Pagination, Navigation } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import { useFetchAllBooksQuery } from '../../redux/features/books/booksApi';
+
+const categories = ["Choose a genre", "Business", "Fiction", "Horror", "Adventure"]
+
+const TopSellers = () => {
+    
+    const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
+    const {data: books = []} = useFetchAllBooksQuery();
+
+    useEffect(()=>{
+        console.log(`books: ${books}`);
+
+    },[books])
+
+   
+  
+    const filteredBooks = selectedCategory === "Choose a genre" ? books : books.filter(book => book.category === selectedCategory.toLowerCase())
+
+    return (
+        <div className='py-10'>
+            <h2 className='text-3xl font-semibold mb-6'>Top Sellers</h2>
+            {/* category filtering */}
+            <div className='mb-8 flex items-center'>
+                <select
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    name="category" id="category" className='border bg-[#EAEAEA] border-gray-300 rounded-md px-4 py-2 focus:outline-none'>
+                    {
+                        categories.map((category, index) => (
+                            <option key={index} value={category}>{category}</option>
+                        ))
+                    }
+                </select>
+            </div>
+
+            <Swiper
+                slidesPerView={1}
+                spaceBetween={30}
+                navigation={true}
+                breakpoints={{
+                    640: {
+                        slidesPerView: 1,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 40,
+                    },
+                    1024: {
+                        slidesPerView: 2,
+                        spaceBetween: 50,
+                    },
+                    1180: {
+                        slidesPerView: 3,
+                        spaceBetween: 50,
+                    }
+                }}
+                modules={[Pagination, Navigation]}
+                className="mySwiper"
+            >
+
+                {
+                   filteredBooks.length > 0 && filteredBooks.map((book, index) => (
+                        <SwiperSlide key={index}>
+                            <BookCard  book={book} />
+                        </SwiperSlide>
+                    ))
+                }
+
+
+
+            </Swiper>
+
+
+        </div>
+    )
+}
+
+export default TopSellers;
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\routers\AdminRoute.jsx ---
+
+import React from 'react'
+import { Navigate, Outlet } from 'react-router-dom';
+
+const AdminRoute = ({children}) => {
+  const token = localStorage.getItem('token');
+  if(!token) {
+    return <Navigate to="/admin"/>
+  }
+  return children ?  children : <Outlet/>;
+}
+
+export default AdminRoute
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\routers\PrivateRoute.jsx ---
+
+import React from 'react'
+import { useAuth } from '../context/AuthContext'
+import { Navigate } from 'react-router-dom'
+
+const PrivateRoute = ({children}) => {
+    const {currentUser, loading} = useAuth();
+
+    if(loading) {
+        return <div>Loading..</div>
+    }
+    if(currentUser) {
+        return children;
+    }
+  
+    return <Navigate to="/login" replace/>
+}
+
+export default PrivateRoute
+
+--- File: C:\Users\Yaniv\Desktop\Recent Projects\book-store-mern-project\frontend\src\routers\router.jsx ---
+
+import { createBrowserRouter } from "react-router-dom";
+import App from "../App";
+import { Home } from "../pages/home/Home";
+import { Login } from "../components/Login";
+import { Register } from "../components/Register";
+import { CartPage } from "../pages/books/CartPage";
+import { CheckoutPage } from "../pages/books/CheckoutPage";
+import { SingleBook } from "../pages/books/SingleBook";
+import PrivateRoute from "./PrivateRoute";
+import OrderPage from "../pages/books/OrderPage";
+import AdminLogin from "../components/AdminLogin";
+import AdminRoute from "./AdminRoute";
+import Dashboard from "../pages/dashboard/Dashboard";
+import DashboardLayout from "../pages/dashboard/DashboardLayout";
+import AddBook from "../pages/dashboard/addBook/AddBook";
+import ManageBooks from "../pages/dashboard/manageBooks/ManageBooks";
+import UpdateBook from "../pages/dashboard/editBook/updateBook";
+import UserDashboard from "../pages/dashboard/users/UserDashboard";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App/>,
+    children: [
+      {
+          path: "/",
+          element: <Home/>,
+      },
+      {
+          path: "/orders",
+          element: <PrivateRoute><OrderPage/></PrivateRoute>
+      },
+      {
+          path: "/about",
+          element: <div>TODO - About </div>
+      },
+      {
+        path: "/login",
+        element: <Login/>
+      },
+      {
+        path: "/register",
+        element: <Register/>
+      },
+      {
+        path: "/cart",
+        element: <CartPage/>
+      },
+      {
+        path: "/checkout",
+        element: <PrivateRoute><CheckoutPage/></PrivateRoute>
+      },
+      {
+        path: "/books/:id",
+        element: <SingleBook/>
+      },
+      {
+        path: "/user-dashboard",
+        element: <PrivateRoute><UserDashboard/></PrivateRoute>
+      }
+      
+    ]
+  },
+  {
+    path: "/admin",
+    element: <AdminLogin/>
+  },
+  {
+    path: "/dashboard",
+    element: <AdminRoute>
+      <DashboardLayout/>
+    </AdminRoute>,
+    children:[
+      {
+        path: "",
+        element: <AdminRoute><Dashboard/></AdminRoute>
+      },
+      {
+        path: "add-new-book",
+        element: <AdminRoute>
+          <AddBook/>
+        </AdminRoute>
+      },
+      {
+        path: "edit-book/:id",
+        element: <AdminRoute>
+          <UpdateBook/>
+        </AdminRoute>
+      },
+      {
+        path: "manage-books",
+        element: <AdminRoute>
+          <ManageBooks/>
+        </AdminRoute>
+      }
+    ]
+  }
+]);
+
+export default router;

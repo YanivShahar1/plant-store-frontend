@@ -1,0 +1,515 @@
+{
+  "plants": [
+    {
+      "name": "Swiss Cheese Plant",
+      "scientificName": "Monstera deliciosa",
+      "description": "The Swiss Cheese Plant, or Monstera deliciosa, is a stunning tropical plant known for its large, glossy leaves with distinctive natural holes (fenestrations). Perfect for creating a bold, jungle-like atmosphere in your home. This plant can grow quite large, making it an impressive statement piece for spacious rooms. Its unique leaf pattern and easy-care nature have made it one of the most popular houseplants worldwide.",
+      "price": 49.99,
+      "oldPrice": 59.99,
+      "stock": 25,
+      "category": "Indoor Plants",
+      "careInstructions": {
+        "light": "Medium Light (Indirect Sun)",
+        "water": "Moderate (Water Weekly)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "High (60%+)"
+      },
+      "images": {
+        "main": "monstera-main.jpg",
+        "gallery": [
+          "monstera-leaf.jpg",
+          "monstera-full.jpg",
+          "monstera-detail.jpg"
+        ]
+      },
+      "dateAdded": "2024-01-20T08:00:00.000Z",
+      "sunExposure": "Partial Sun (3-6 hours direct)",
+      "plantSize": "Large (100cm+/3ft+)",
+      "poisonous": true,
+      "trending": true,
+      "features": [
+        "Air Purifying",
+        "Pet Friendly",
+        "Low Maintenance"
+      ],
+      "maintenanceLevel": "Easy",
+      "growthRate": "Fast",
+      "bloomingSeason": "Non-flowering",
+      "status": "In Stock",
+      "tags": [
+        "tropical",
+        "large leaves",
+        "climbing plant",
+        "fenestrated leaves",
+        "statement plant"
+      ]
+    },
+    {
+      "name": "Chinese Money Plant",
+      "scientificName": "Pilea peperomioides",
+      "description": "The Chinese Money Plant, with its quirky round leaves and compact size, is a charming addition to any plant collection. Known for its pancake-shaped foliage that seems to dance on thin stems, this plant has become increasingly popular for its unique appearance and easy-care nature. It's perfect for desks, windowsills, and small spaces, making it ideal for both beginners and experienced plant parents.",
+      "price": 24.99,
+      "oldPrice": 29.99,
+      "stock": 30,
+      "category": "Indoor Plants",
+      "careInstructions": {
+        "light": "Medium Light (Indirect Sun)",
+        "water": "Moderate (Water Weekly)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "Medium (40-60%)"
+      },
+      "images": {
+        "main": "pilea-main.jpg",
+        "gallery": [
+          "pilea-full.jpg",
+          "pilea-leaves.jpg",
+          "pilea-babies.jpg"
+        ]
+      },
+      "dateAdded": "2024-01-22T08:00:00.000Z",
+      "sunExposure": "Partial Sun (3-6 hours direct)",
+      "plantSize": "Small (Up to 30cm/12\")",
+      "poisonous": false,
+      "trending": true,
+      "features": [
+        "Pet Friendly",
+        "Low Maintenance",
+        "Air Purifying"
+      ],
+      "maintenanceLevel": "Easy",
+      "growthRate": "Medium",
+      "bloomingSeason": "Non-flowering",
+      "status": "In Stock",
+      "tags": [
+        "compact",
+        "round leaves",
+        "propagation friendly",
+        "modern",
+        "feng shui"
+      ]
+    },
+    {
+      "name": "Snake Plant Laurentii",
+      "scientificName": "Dracaena trifasciata 'Laurentii'",
+      "description": "The Snake Plant Laurentii is a striking succulent with tall, architectural leaves featuring bold yellow edges. Known for being nearly indestructible, it's perfect for busy people or those new to plant care. This air-purifying powerhouse is especially effective at removing indoor air pollutants and releasing oxygen at night, making it an excellent bedroom companion. Its striking vertical growth and modern appearance make it a versatile choice for any room.",
+      "price": 34.99,
+      "oldPrice": 39.99,
+      "stock": 40,
+      "category": "Succulents & Cacti",
+      "careInstructions": {
+        "light": "Low Light (Shade)",
+        "water": "Low (Keep Soil Dry)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "Low (30-40%)"
+      },
+      "images": {
+        "main": "snake-plant-main.jpg",
+        "gallery": [
+          "snake-plant-full.jpg",
+          "snake-plant-detail.jpg",
+          "snake-plant-group.jpg"
+        ]
+      },
+      "dateAdded": "2024-01-21T08:00:00.000Z",
+      "sunExposure": "Full Sun (6+ hours direct)",
+      "plantSize": "Medium (30-100cm/1-3ft)",
+      "poisonous": true,
+      "trending": false,
+      "features": [
+        "Air Purifying",
+        "Drought Resistant",
+        "Low Maintenance"
+      ],
+      "maintenanceLevel": "Easy",
+      "growthRate": "Slow",
+      "bloomingSeason": "Non-flowering",
+      "status": "In Stock",
+      "tags": [
+        "succulent",
+        "air purifying",
+        "vertical growth",
+        "modern",
+        "drought tolerant"
+      ]
+    },
+    {
+      "name": "Fresh Mint",
+      "scientificName": "Mentha spicata",
+      "description": "Fresh mint is a vigorous, aromatic herb known for its refreshing flavor and cooling sensation. Its bright green leaves and rapid growth make it perfect for both culinary use and garden aesthetics. While excellent for containers, be cautious when planting in gardens as it can spread aggressively. Popular in teas, cocktails, and Mediterranean cuisine, mint is both decorative and highly practical.",
+      "price": 12.99,
+      "oldPrice": 15.99,
+      "stock": 50,
+      "category": "Herbs",
+      "careInstructions": {
+        "light": "Medium Light (Indirect Sun)",
+        "water": "High (Keep Soil Moist)",
+        "temperature": "Average (15-25°C / 59-77°F)",
+        "humidity": "Medium (40-60%)"
+      },
+      "images": {
+        "main": "mint-main.jpg",
+        "gallery": [
+          "mint-leaves.jpg",
+          "mint-plant.jpg",
+          "mint-garden.jpg"
+        ]
+      },
+      "dateAdded": "2024-01-25T08:00:00.000Z",
+      "sunExposure": "Partial Sun (3-6 hours direct)",
+      "plantSize": "Small (20-40cm/8-16\")",
+      "poisonous": false,
+      "trending": true,
+      "features": [
+        "Culinary Use",
+        "Fast Growing",
+        "Aromatic"
+      ],
+      "maintenanceLevel": "Easy",
+      "growthRate": "Fast",
+      "bloomingSeason": "Summer",
+      "status": "In Stock",
+      "tags": [
+        "herb",
+        "edible",
+        "spreading",
+        "container friendly",
+        "aromatic"
+      ]
+    },
+    {
+      "name": "Coriander",
+      "scientificName": "Coriandrum sativum",
+      "description": "Coriander, also known as cilantro, is a versatile herb essential in many world cuisines. This annual herb produces delicate, lacy leaves and small white flowers when it bolts. Every part of the plant is usable - from the fresh leaves to the dried seeds. It's perfect for indoor herb gardens and containers, offering both culinary value and aesthetic appeal with its delicate, ferny foliage.",
+      "price": 8.99,
+      "oldPrice": 10.99,
+      "stock": 45,
+      "category": "Herbs",
+      "careInstructions": {
+        "light": "High Light (Direct Sun)",
+        "water": "Moderate (Keep Soil Moist)",
+        "temperature": "Cool (15-20°C / 59-68°F)",
+        "humidity": "Medium (40-60%)"
+      },
+      "images": {
+        "main": "coriander-main.jpg",
+        "gallery": [
+          "coriander-leaves.jpg",
+          "coriander-flowers.jpg",
+          "coriander-seeds.jpg"
+        ]
+      },
+      "dateAdded": "2024-01-26T08:00:00.000Z",
+      "sunExposure": "Full Sun (6+ hours direct)",
+      "plantSize": "Small (20-50cm/8-20\")",
+      "poisonous": false,
+      "trending": false,
+      "features": [
+        "Culinary Use",
+        "Quick Growing",
+        "Dual Purpose"
+      ],
+      "maintenanceLevel": "Moderate",
+      "growthRate": "Fast",
+      "bloomingSeason": "Summer",
+      "status": "In Stock",
+      "tags": [
+        "herb",
+        "edible",
+        "annual",
+        "culinary",
+        "bolt resistant"
+      ]
+    },
+    {
+      "name": "Oyster Mushroom Kit",
+      "scientificName": "Pleurotus ostreatus",
+      "description": "The Oyster Mushroom growing kit offers an exciting way to grow your own gourmet mushrooms at home. These beautiful, fan-shaped mushrooms are known for their delicate texture and mild, seafood-like flavor. The kit comes complete with colonized substrate and simple instructions for multiple harvests. Perfect for culinary enthusiasts and those interested in indoor food cultivation.",
+      "price": 29.99,
+      "oldPrice": 34.99,
+      "stock": 20,
+      "category": "Mushrooms",
+      "careInstructions": {
+        "light": "Low Light (Indirect)",
+        "water": "High (Mist Daily)",
+        "temperature": "Cool (15-20°C / 59-68°F)",
+        "humidity": "Very High (80-90%)"
+      },
+      "images": {
+        "main": "oyster-mushroom-main.jpg",
+        "gallery": [
+          "oyster-mushroom-kit.jpg",
+          "oyster-mushroom-growth.jpg",
+          "oyster-mushroom-harvest.jpg"
+        ]
+      },
+      "dateAdded": "2024-01-27T08:00:00.000Z",
+      "sunExposure": "No Direct Sun",
+      "plantSize": "Varies (10-20cm/4-8\" clusters)",
+      "poisonous": false,
+      "trending": true,
+      "features": [
+        "Indoor Growing",
+        "Multiple Harvests",
+        "Culinary Use"
+      ],
+      "maintenanceLevel": "Moderate",
+      "growthRate": "Very Fast",
+      "bloomingSeason": "Year-round",
+      "status": "In Stock",
+      "tags": [
+        "mushroom",
+        "edible",
+        "indoor growing",
+        "gourmet",
+        "sustainable"
+      ]
+    },
+    {
+      "name": "Lavender",
+      "scientificName": "Lavandula angustifolia",
+      "description": "Lavender is a beautifully fragrant herb that produces purple-blue flower spikes. Perfect for gardens and containers, it attracts pollinators and can be used for both ornamental and culinary purposes.",
+      "price": 15.99,
+      "stock": 75,
+      "category": "Herbs & Vegetables",
+      "careInstructions": {
+        "light": "Bright Light (Direct Sun)",
+        "water": "Moderate (Water Weekly)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "Low (30-40%)"
+      },
+      "sunExposure": "Full Sun (6+ hours direct)",
+      "plantSize": "Small (Up to 30cm/12\")",
+      "maintenanceLevel": "Moderate",
+      "growthRate": "Medium",
+      "features": [
+        "Aromatic",
+        "Bee Friendly",
+        "Drought Resistant"
+      ],
+      "bloomingSeason": "Summer",
+      "coverImage": "lavender-cover.jpg",
+      "tags": ["herb", "fragrant", "pollinator friendly", "mediterranean"],
+      "dateAdded": "2024-02-01T09:15:00.000Z",
+      "lastUpdated": "2024-03-19T14:20:00.000Z",
+      "poisonous": false,
+      "trending": false,
+      "status": "In Stock"
+    },
+    {
+      "name": "Echeveria Elegans",
+      "scientificName": "Echeveria elegans",
+      "description": "Echeveria Elegans, also known as Mexican Snowball, is a beautiful rosette-forming succulent with pale blue-green leaves. Its compact size and drought tolerance make it perfect for rock gardens and containers.",
+      "price": 12.99,
+      "stock": 100,
+      "category": "Succulents & Cacti",
+      "careInstructions": {
+        "light": "Bright Light (Direct Sun)",
+        "water": "Low (Keep Soil Dry)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "Low (30-40%)"
+      },
+      "sunExposure": "Full Sun (6+ hours direct)",
+      "plantSize": "Small (Up to 30cm/12\")",
+      "maintenanceLevel": "Easy",
+      "growthRate": "Slow",
+      "features": [
+        "Drought Resistant",
+        "Low Maintenance"
+      ],
+      "bloomingSeason": "Spring",
+      "coverImage": "echeveria-cover.jpg",
+      "tags": ["succulent", "rosette", "drought tolerant", "container plant"],
+      "dateAdded": "2024-02-15T10:20:00.000Z",
+      "lastUpdated": "2024-03-18T16:15:00.000Z",
+      "poisonous": false,
+      "trending": false,
+      "status": "In Stock"
+    },
+    {
+      "name": "Japanese Maple",
+      "scientificName": "Acer palmatum",
+      "description": "Japanese Maple is a stunning ornamental tree known for its delicate, lacy foliage that changes color throughout the seasons. Perfect as a focal point in gardens, it provides year-round interest with its architectural form.",
+      "price": 149.99,
+      "oldPrice": 179.99,
+      "stock": 8,
+      "category": "Trees & Shrubs",
+      "careInstructions": {
+        "light": "Medium Light (Indirect Sun)",
+        "water": "Moderate (Water Weekly)",
+        "temperature": "Cool (15-18°C / 60-65°F)",
+        "humidity": "Medium (40-60%)"
+      },
+      "sunExposure": "Partial Sun (3-6 hours direct)",
+      "plantSize": "Large (100cm+/3ft+)",
+      "maintenanceLevel": "Expert",
+      "growthRate": "Medium",
+      "features": [
+        "Low Maintenance"
+      ],
+      "bloomingSeason": "Spring",
+      "coverImage": "japanese-maple-cover.jpg",
+      "tags": ["tree", "ornamental", "fall color", "shade garden"],
+      "dateAdded": "2024-01-20T13:45:00.000Z",
+      "lastUpdated": "2024-03-17T11:30:00.000Z",
+      "poisonous": false,
+      "trending": false,
+      "status": "Low Stock"
+    },
+    {
+      "name": "Wax Plant",
+      "scientificName": "Hoya carnosa",
+      "description": "Hoya carnosa, commonly known as Wax Plant or Porcelain Flower, is a popular trailing houseplant known for its thick, waxy leaves and clusters of star-shaped, fragrant flowers. This slow-growing vine produces beautiful pink-white umbels of flowers that have a sweet, honey-like fragrance. Native to Eastern Asia and Australia, it makes an excellent hanging basket specimen or can be trained to grow on a trellis.",
+      "price": 24.99,
+      "oldPrice": 29.99,
+      "stock": 45,
+      "category": "Indoor Plants",
+      "careInstructions": {
+        "light": "Medium Light (Indirect Sun)",
+        "water": "Moderate (Water Weekly)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "Medium (40-60%)"
+      },
+      "sunExposure": "Partial Sun (3-6 hours direct)",
+      "plantSize": "Medium (30-100cm/1-3ft)",
+      "maintenanceLevel": "Moderate",
+      "growthRate": "Slow",
+      "features": [
+        "Air Purifying",
+        "Low Maintenance",
+        "Drought Resistant"
+      ],
+      "bloomingSeason": "Summer",
+      "coverImage": "hoya-carnosa-main.jpg",
+      "tags": [
+        "hoya",
+        "wax plant",
+        "porcelain flower",
+        "trailing plant",
+        "flowering plant",
+        "vine",
+        "succulent-like",
+        "fragrant",
+        "asian plants",
+        "tropical"
+      ],
+      "dateAdded": "2024-01-15T00:00:00.000Z",
+      "lastUpdated": "2024-12-08T00:00:00.000Z",
+      "poisonous": false,
+      "trending": true,
+      "status": "In Stock"
+    },
+    {
+      "name": "Bird's Nest Fern",
+      "scientificName": "Asplenium nidus",
+      "description": "The Bird's Nest Fern is a striking tropical plant characterized by its wavy, bright green fronds that emerge from a central rosette, resembling a bird's nest. Unlike other ferns, its leaves are whole rather than divided, creating a unique architectural statement. This easy-care plant thrives in humid environments, making it perfect for bathrooms or kitchens. Its distinctive rippled edges and glossy texture add a sophisticated touch to any indoor space.",
+      "price": 32.99,
+      "oldPrice": 39.99,
+      "stock": 35,
+      "category": "Indoor Plants",
+      "careInstructions": {
+        "light": "Medium Light (Indirect Sun)",
+        "water": "Moderate (Water Weekly)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "High (60%+)"
+      },
+      "sunExposure": "Partial Sun (3-6 hours direct)",
+      "plantSize": "Medium (30-100cm/1-3ft)",
+      "maintenanceLevel": "Easy",
+      "growthRate": "Medium",
+      "features": [
+        "Air Purifying",
+        "Pet Friendly",
+        "Low Maintenance"
+      ],
+      "bloomingSeason": "Non-flowering",
+      "coverImage": "birds-nest-fern-cover.jpg",
+      "tags": [
+        "fern",
+        "tropical",
+        "humidity loving",
+        "bathroom plant",
+        "shade tolerant"
+      ],
+      "dateAdded": "2024-03-01T08:00:00.000Z",
+      "lastUpdated": "2024-03-20T14:30:00.000Z",
+      "poisonous": false,
+      "trending": true,
+      "status": "In Stock"
+    },
+    {
+      "name": "String of Pearls",
+      "scientificName": "Senecio rowleyanus",
+      "description": "String of Pearls is a fascinating succulent with cascading stems covered in small, round leaves that resemble a string of green pearls. This unique trailing plant is perfect for hanging baskets or high shelves where its delicate strands can cascade down. When in bloom, it produces tiny white flowers with a sweet cinnamon scent. Its unusual appearance makes it a conversation starter and adds intrigue to any plant collection.",
+      "price": 19.99,
+      "oldPrice": 24.99,
+      "stock": 25,
+      "category": "Succulents & Cacti",
+      "careInstructions": {
+        "light": "Bright Light (Direct Sun)",
+        "water": "Low (Keep Soil Dry)",
+        "temperature": "Average (18-24°C / 65-75°F)",
+        "humidity": "Low (30-40%)"
+      },
+      "sunExposure": "Full Sun (6+ hours direct)",
+      "plantSize": "Small (Up to 30cm/12\")",
+      "maintenanceLevel": "Moderate",
+      "growthRate": "Fast",
+      "features": [
+        "Drought Resistant",
+        "Low Maintenance"
+      ],
+      "bloomingSeason": "Summer",
+      "coverImage": "string-of-pearls-cover.jpg",
+      "tags": [
+        "succulent",
+        "trailing plant",
+        "hanging plant",
+        "drought tolerant",
+        "unique foliage"
+      ],
+      "dateAdded": "2024-03-05T09:15:00.000Z",
+      "lastUpdated": "2024-03-19T16:45:00.000Z",
+      "poisonous": true,
+      "trending": true,
+      "status": "In Stock"
+    },
+    {
+      "name": "Peacock Plant",
+      "scientificName": "Calathea makoyana",
+      "description": "The Peacock Plant, with its stunning oval leaves marked with intricate patterns resembling peacock feathers, is a true botanical masterpiece. Each leaf displays a mesmerizing combination of light and dark green patterns on the top, while the undersides reveal a rich purple hue. This tropical beauty is also known for its nyctinastic movements - its leaves fold up at night and unfurl in the morning, earning it a place among 'prayer plants'. While it requires specific care conditions, its extraordinary beauty makes it worth the extra attention.",
+      "price": 45.99,
+      "oldPrice": 54.99,
+      "stock": 15,
+      "category": "Indoor Plants",
+      "careInstructions": {
+        "light": "Medium Light (Indirect Sun)",
+        "water": "Frequent (2-3 Times Weekly)",
+        "temperature": "Warm (24-29°C / 75-85°F)",
+        "humidity": "High (60%+)"
+      },
+      "sunExposure": "Shade (minimal direct sun)",
+      "plantSize": "Medium (30-100cm/1-3ft)",
+      "maintenanceLevel": "Expert",
+      "growthRate": "Medium",
+      "features": [
+        "Air Purifying",
+        "Pet Friendly"
+      ],
+      "bloomingSeason": "Non-flowering",
+      "coverImage": "peacock-plant-cover.jpg",
+      "tags": [
+        "calathea",
+        "prayer plant",
+        "tropical",
+        "patterned leaves",
+        "humidity loving"
+      ],
+      "dateAdded": "2024-03-10T10:30:00.000Z",
+      "lastUpdated": "2024-03-20T09:15:00.000Z",
+      "poisonous": false,
+      "trending": false,
+      "status": "Low Stock"
+    }
+     
+  ]
+}
