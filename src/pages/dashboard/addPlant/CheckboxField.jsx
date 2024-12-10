@@ -1,4 +1,3 @@
-// components/CheckboxField.jsx
 import React from 'react';
 
 const CheckboxField = ({ label, name, register }) => {
