@@ -1,13 +1,13 @@
-# 🌿 Plant Store MERN Project
+# 🌿 Plant Store Frontend
 
-A full-stack e-commerce web application for a plant store built with the MERN stack (MongoDB, Express.js, React.js, Node.js).
+A React-based frontend for a plant store e-commerce platform, built with Vite, Redux Toolkit, and TailwindCSS.
 
 > **Note**: This is a demonstration/portfolio project. The checkout process is simulated and no real transactions are processed. All plants and prices are for demonstration purposes only.
 
 ## 🎥 Project Preview
 <p align="center">
   <a href="https://youtu.be/__J_0LBf-cc">
-    <img src="https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg" alt="Plant Store MERN Project" width="600"/>
+    <img src="https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg" alt="Plant Store Frontend Demo" width="600"/>
   </a>
 </p>
 <p align="center">Click the image above to watch the demo video</p>
@@ -15,70 +15,74 @@ A full-stack e-commerce web application for a plant store built with the MERN st
 ## 🔗 Quick Links
 - 🌐 [Live Demo](https://plant-store-frontend.vercel.app/)
 - 📹 [Video Walkthrough](https://youtu.be/__J_0LBf-cc)
-- 💻 [Frontend Repository](https://github.com/YanivShahar1/plant-store-frontend)
 - 🔧 [Backend Repository](https://github.com/YanivShahar1/plant-store-backend)
 
 ## ✨ Features
 
-- 🪴 **Plant Showcase**
-  - Browse plants by category
-  - Detailed plant information (care instructions, characteristics)
-  - Search functionality
-  - Trending plants section
-  - Top sellers showcase
+- 🎯 **Modern React Implementation**
+  - Built with Vite for faster development
+  - Redux Toolkit for state management
+  - React Router v6 for navigation
+  - Custom hooks for reusable logic
 
-- 🛒 **Shopping Cart Demo**
-  - Add/remove items from cart
-  - Simulated checkout process
-  - Demo order history
+- 🎨 **User Interface**
+  - Responsive design using TailwindCSS
+  - Interactive product carousels with Swiper.js
+  - Dynamic search and filtering
+  - Skeleton loading states
+  - Error boundaries
+
+- 🛒 **Shopping Features**
+  - Real-time cart management
   - Wishlist functionality
+  - Category filtering
+  - Search functionality
+  - Product details with care instructions
 
 - 👤 **User Features**
-  - User authentication (Email/Password & Google Sign-in)
-  - User profile dashboard
-  - Demo order tracking
-  - Personal preferences management
+  - Firebase Authentication
+  - Google Sign-in integration
+  - Protected routes
+  - User profile management
+  - Order history tracking
 
-- 👨‍💼 **Admin Dashboard**
+- 📊 **Admin Dashboard**
   - Plant inventory management
-  - Sample order management
-  - Demo analytics and statistics
+  - Interactive charts using Chart.js
+  - Sales analytics display
   - User management interface
 
-## 🚀 Technologies Used
+## 🚀 Technical Stack
 
-### Frontend
-- React.js with Vite
-- Redux Toolkit (State Management)
-- TailwindCSS (Styling)
-- React Router (Navigation)
-- Swiper.js (Carousels)
-- Axios (API Requests)
-- Firebase (Authentication)
-- Chart.js (Analytics)
+- **Framework**: React.js 18 with Vite
+- **State Management**: Redux Toolkit
+- **Styling**: TailwindCSS
+- **Routing**: React Router v6
+- **Authentication**: Firebase
+- **UI Components**:
+  - Swiper.js
+  - Chart.js
+  - React Icons
+- **HTTP Client**: Axios
+- **Forms**: React Hook Form
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB
-- JWT (Authentication)
-- Multer (File Uploads)
+## 🛠️ Installation
 
-## 🛠️ Installation & Setup
-
-1. **Clone the repositories**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/YanivShahar1/plant-store-frontend.git
-   git clone https://github.com/YanivShahar1/plant-store-backend.git
+   cd plant-store-frontend
    ```
 
-2. **Frontend Setup**
+2. **Install dependencies**
    ```bash
-   cd plant-store-frontend
    npm install
+   ```
 
-   # Configure environment variables
-   # Create .env file with:
+3. **Environment Setup**
+   
+   Create `.env` file:
+   ```env
    VITE_API_KEY=            # Firebase API Key
    VITE_PROJECT_ID=         # Firebase Project ID
    VITE_STORAGE_BUCKET=     # Firebase Storage Bucket
@@ -86,28 +90,9 @@ A full-stack e-commerce web application for a plant store built with the MERN st
    VITE_APPID=             # Firebase App ID
    ```
 
-3. **Backend Setup**
-   ```bash
-   cd plant-store-backend
-   npm install
-
-   # Configure environment variables
-   # Create .env file with:
-   MONGODB_URI=            # Your MongoDB connection string
-   JWT_SECRET_KEY=         # Your JWT secret key
-   PORT=5000               # Port number
-   ```
-
-4. **Running the Application**
-   
-   Frontend:
+4. **Start Development Server**
    ```bash
    npm run dev
-   ```
-
-   Backend:
-   ```bash
-   npm start
    ```
 
 ## 🌿 Demo Accounts
@@ -117,49 +102,45 @@ A full-stack e-commerce web application for a plant store built with the MERN st
 - Password: `demo123`
 
 ### Admin Demo
-- Username: `admin@example.com`
+- Email: `admin@example.com`
 - Password: `admin123`
-- URL: `/admin`
+- Access: Navigate to `/admin`
 
-## 💡 Project Purpose
+## 💡 Key Implementation Details
 
-This project was created to demonstrate:
-- Full-stack development capabilities using the MERN stack
-- Implementation of authentication and authorization
-- Complex state management in React applications
+### Component Structure
+- Atomic design pattern
+- Reusable components
+- Layout components
+- Protected route wrappers
+
+### State Management
+- Redux Toolkit for global state
+- RTK Query for API calls
+- Local state with useState
+- Context for auth state
+
+### Styling Approach
+- TailwindCSS for utility-first styling
+- Custom components
 - Responsive design principles
-- RESTful API design
-- Database modeling and relationships
-- Admin dashboard functionality
+- Dynamic themes
 
-## 📱 Key Implementations
+### Performance Optimizations
+- Lazy loading components
+- Memoization where needed
+- Image optimization
+- Error boundaries
 
-- Responsive design for all screen sizes
-- Protected routes and role-based access
-- Form validation and error handling
-- Real-time updates using Redux
-- Comprehensive plant management system
-- Interactive admin dashboard with charts
-- Google OAuth integration
-- JWT-based authentication
+## 🔧 Available Scripts
 
-## 🔧 Environment Variables
-
-Frontend (`.env`):
-```env
-VITE_API_KEY=
-VITE_PROJECT_ID=
-VITE_STORAGE_BUCKET=
-VITE_MESSAGING_SENDERID=
-VITE_APPID=
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run lint     # Run ESLint
 ```
 
-Backend (`.env`):
-```env
-MONGODB_URI=
-JWT_SECRET_KEY=
-PORT=5000
-```
 
 ## 📄 License
 
@@ -167,18 +148,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Contributing
 
-While this is a demo project, contributions are welcome! Feel free to:
+Contributions are welcome! Please:
 1. Fork the project
 2. Create a feature branch
 3. Commit your changes
 4. Push to the branch
 5. Open a Pull Request
 
-
-Project Links:
-- Frontend: [https://github.com/YanivShahar1/plant-store-frontend](https://github.com/YanivShahar1/plant-store-frontend)
-- Backend: [https://github.com/YanivShahar1/plant-store-backend](https://github.com/YanivShahar1/plant-store-backend)
-
----
 
 Made with ❤️ by [Yaniv Shahar](https://github.com/yanivshahar1)
