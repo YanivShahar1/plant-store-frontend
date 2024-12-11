@@ -73,16 +73,14 @@ A full-stack e-commerce web application for a plant store built with the MERN st
    
    Frontend `.env`:
    ```env
-   REACT_APP_API_URL=your_api_url
-   REACT_APP_FIREBASE_CONFIG=your_firebase_config
-   ```
+    # Firebase Configuration
+    VITE_API_KEY=            # Firebase API Key
+    VITE_PROJECT_ID=         # Firebase Project ID
+    VITE_STORAGE_BUCKET=     # Firebase Storage Bucket
+    VITE_MESSAGING_SENDERID= # Firebase Messaging Sender ID
+    VITE_APPID=             # Firebase App ID
+    ```
 
-   Backend `.env`:
-   ```env
-   MONGODB_URI=your_mongodb_uri
-   JWT_SECRET=your_jwt_secret
-   PORT=5000
-   ```
 
 5. **Run the application**
 
@@ -154,14 +152,6 @@ To access the admin dashboard:
 
 Required environment variables:
 
-```env
-# Firebase Configuration
-VITE_API_KEY=            # Firebase API Key
-VITE_PROJECT_ID=         # Firebase Project ID
-VITE_STORAGE_BUCKET=     # Firebase Storage Bucket
-VITE_MESSAGING_SENDERID= # Firebase Messaging Sender ID
-VITE_APPID=             # Firebase App ID
-```
 
 ## 📄 License
 
