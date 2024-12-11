@@ -6,9 +6,13 @@ A full-stack e-commerce web application for a plant store built with the MERN st
 
 [![Plant Store MERN Project](https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg)](https://youtu.be/__J_0LBf-cc)
 
-## 🔗 Live Demo
-- 🌐 [Live Website](https://plant-store-frontend.vercel.app/)
-- 📹 [Video Demo](https://youtu.be/__J_0LBf-cc)
+## 🎥 Project Preview
+[![Plant Store MERN Project](https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg)](https://youtu.be/__J_0LBf-cc)
+<p align="center">Click the image above to watch the demo video</p>
+
+## 🔗 Quick Links
+- 🌐 [Live Demo](https://plant-store-frontend.vercel.app/)
+- 📹 [Video Walkthrough](https://youtu.be/__J_0LBf-cc)
 
 
 ## ✨ Features
