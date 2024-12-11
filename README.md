@@ -2,10 +2,14 @@
 
 A full-stack e-commerce web application for a plant store built with the MERN stack (MongoDB, Express.js, React.js, Node.js).
 
-## 🔗 Live Demo
-[View Live Demo](https://youtu.be/__J_0LBf-cc) 
+## 🎥 Project Preview
 
-[![Website Preview]](https://plant-store-frontend.vercel.app/)
+[![Plant Store MERN Project](https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg)](https://youtu.be/__J_0LBf-cc)
+
+## 🔗 Live Demo
+- 🌐 [Live Website](https://plant-store-frontend.vercel.app/)
+- 📹 [Video Demo](https://youtu.be/__J_0LBf-cc)
+
 
 ## ✨ Features
 
