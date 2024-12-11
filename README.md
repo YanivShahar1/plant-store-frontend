@@ -4,14 +4,6 @@ A React-based frontend for a plant store e-commerce platform, built with Vite, R
 
 > **Note**: This is a demonstration/portfolio project. The checkout process is simulated and no real transactions are processed. All plants and prices are for demonstration purposes only.
 
-## 🎥 Project Preview
-<p align="center">
-  <a href="https://youtu.be/__J_0LBf-cc">
-    <img src="https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg" alt="Plant Store Frontend Demo" width="600"/>
-  </a>
-</p>
-<p align="center">Click the image above to watch the demo video</p>
-
 ## 🔗 Quick Links
 - 🌐 [Live Demo](https://plant-store-frontend.vercel.app/)
 - 📹 [Video Walkthrough](https://youtu.be/__J_0LBf-cc)
