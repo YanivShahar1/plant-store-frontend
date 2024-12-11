@@ -2,51 +2,53 @@
 
 A full-stack e-commerce web application for a plant store built with the MERN stack (MongoDB, Express.js, React.js, Node.js).
 
-## 🎥 Project Preview
-
-[![Plant Store MERN Project](https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg)](https://youtu.be/__J_0LBf-cc)
+> **Note**: This is a demonstration/portfolio project. The checkout process is simulated and no real transactions are processed. All plants and prices are for demonstration purposes only.
 
 ## 🎥 Project Preview
-[![Plant Store MERN Project](https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg)](https://youtu.be/__J_0LBf-cc)
+<p align="center">
+  <a href="https://youtu.be/__J_0LBf-cc">
+    <img src="https://img.youtube.com/vi/__J_0LBf-cc/maxresdefault.jpg" alt="Plant Store MERN Project" width="600"/>
+  </a>
+</p>
 <p align="center">Click the image above to watch the demo video</p>
 
 ## 🔗 Quick Links
 - 🌐 [Live Demo](https://plant-store-frontend.vercel.app/)
 - 📹 [Video Walkthrough](https://youtu.be/__J_0LBf-cc)
-
+- 💻 [Frontend Repository](https://github.com/YanivShahar1/plant-store-frontend)
+- 🔧 [Backend Repository](https://github.com/YanivShahar1/plant-store-backend)
 
 ## ✨ Features
 
-- 🪴 **Plant Catalog**
+- 🪴 **Plant Showcase**
   - Browse plants by category
   - Detailed plant information (care instructions, characteristics)
   - Search functionality
   - Trending plants section
   - Top sellers showcase
 
-- 🛒 **Shopping Experience**
-  - Shopping cart functionality
-  - Secure checkout process
-  - Order history
-  - Wishlist support
+- 🛒 **Shopping Cart Demo**
+  - Add/remove items from cart
+  - Simulated checkout process
+  - Demo order history
+  - Wishlist functionality
 
-- 👤 **User Management**
+- 👤 **User Features**
   - User authentication (Email/Password & Google Sign-in)
-  - User dashboard
-  - Order tracking
-  - Personal profile management
+  - User profile dashboard
+  - Demo order tracking
+  - Personal preferences management
 
 - 👨‍💼 **Admin Dashboard**
   - Plant inventory management
-  - Order management
-  - Sales analytics
-  - User management
-  - Real-time statistics
+  - Sample order management
+  - Demo analytics and statistics
+  - User management interface
 
 ## 🚀 Technologies Used
 
 ### Frontend
-- React.js
+- React.js with Vite
 - Redux Toolkit (State Management)
 - TailwindCSS (Styling)
 - React Router (Navigation)
@@ -64,107 +66,100 @@ A full-stack e-commerce web application for a plant store built with the MERN st
 
 ## 🛠️ Installation & Setup
 
-1. **Clone the repository**
+1. **Clone the repositories**
    ```bash
-   git clone https://github.com/yourusername/plant-store-mern.git
-   cd plant-store-mern
+   git clone https://github.com/YanivShahar1/plant-store-frontend.git
+   git clone https://github.com/YanivShahar1/plant-store-backend.git
    ```
 
-2. **Install dependencies for frontend**
+2. **Frontend Setup**
    ```bash
-   cd frontend
+   cd plant-store-frontend
    npm install
+
+   # Configure environment variables
+   # Create .env file with:
+   VITE_API_KEY=            # Firebase API Key
+   VITE_PROJECT_ID=         # Firebase Project ID
+   VITE_STORAGE_BUCKET=     # Firebase Storage Bucket
+   VITE_MESSAGING_SENDERID= # Firebase Messaging Sender ID
+   VITE_APPID=             # Firebase App ID
    ```
 
-3. **Install dependencies for backend**
+3. **Backend Setup**
    ```bash
-   cd backend
+   cd plant-store-backend
    npm install
+
+   # Configure environment variables
+   # Create .env file with:
+   MONGODB_URI=            # Your MongoDB connection string
+   JWT_SECRET_KEY=         # Your JWT secret key
+   PORT=5000               # Port number
    ```
 
-4. **Set up environment variables**
+4. **Running the Application**
    
-   Frontend `.env`:
-   ```env
-    # Firebase Configuration
-    VITE_API_KEY=            # Firebase API Key
-    VITE_PROJECT_ID=         # Firebase Project ID
-    VITE_STORAGE_BUCKET=     # Firebase Storage Bucket
-    VITE_MESSAGING_SENDERID= # Firebase Messaging Sender ID
-    VITE_APPID=             # Firebase App ID
-    ```
-
-
-5. **Run the application**
-
    Frontend:
    ```bash
-   cd frontend
-   npm start
+   npm run dev
    ```
 
    Backend:
    ```bash
-   cd backend
    npm start
    ```
 
-## 🌱 Features Details
+## 🌿 Demo Accounts
 
-### Plant Management
-- Add, edit, and delete plants
-- Upload plant images
-- Set plant details (name, scientific name, price, etc.)
-- Manage stock levels
-- Track plant care instructions
+### Customer Demo
+- Email: `demo@example.com`
+- Password: `demo123`
 
-### Care Instructions
-- Light requirements
-- Watering needs
-- Temperature preferences
-- Humidity levels
-- Maintenance difficulty
-
-### Order Processing
-- Cart management
-- Checkout process
-- Order tracking
-- Delivery status updates
-
-### Analytics Dashboard
-- Sales tracking
-- Popular plants
-- Revenue charts
-- Customer statistics
-
-## 📱 Screenshots
-
-Here are some screenshots of the application:
-
-### Homepage
-![Homepage](path-to-homepage-screenshot.jpg)
-*Main landing page with featured plants and categories*
-
-### Product Page
-![Product Page](path-to-product-screenshot.jpg)
-*Detailed view of plant information and care instructions*
-
-### Admin Dashboard
-![Admin Dashboard](path-to-admin-screenshot.jpg)
-*Administrative interface for managing the store*
-
-## 🔑 Admin Access
-
-To access the admin dashboard:
+### Admin Demo
+- Username: `admin@example.com`
+- Password: `admin123`
 - URL: `/admin`
-- Default admin credentials:
-  - Username: `admin@example.com`
-  - Password: `admin123`
+
+## 💡 Project Purpose
+
+This project was created to demonstrate:
+- Full-stack development capabilities using the MERN stack
+- Implementation of authentication and authorization
+- Complex state management in React applications
+- Responsive design principles
+- RESTful API design
+- Database modeling and relationships
+- Admin dashboard functionality
+
+## 📱 Key Implementations
+
+- Responsive design for all screen sizes
+- Protected routes and role-based access
+- Form validation and error handling
+- Real-time updates using Redux
+- Comprehensive plant management system
+- Interactive admin dashboard with charts
+- Google OAuth integration
+- JWT-based authentication
 
 ## 🔧 Environment Variables
 
-Required environment variables:
+Frontend (`.env`):
+```env
+VITE_API_KEY=
+VITE_PROJECT_ID=
+VITE_STORAGE_BUCKET=
+VITE_MESSAGING_SENDERID=
+VITE_APPID=
+```
 
+Backend (`.env`):
+```env
+MONGODB_URI=
+JWT_SECRET_KEY=
+PORT=5000
+```
 
 ## 📄 License
 
@@ -172,13 +167,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
+While this is a demo project, contributions are welcome! Feel free to:
 1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
 5. Open a Pull Request
 
 
-Made with ❤️ by Yaniv Shahar(https://github.com/yanivshahar1)
+Project Links:
+- Frontend: [https://github.com/YanivShahar1/plant-store-frontend](https://github.com/YanivShahar1/plant-store-frontend)
+- Backend: [https://github.com/YanivShahar1/plant-store-backend](https://github.com/YanivShahar1/plant-store-backend)
+
+---
+
+Made with ❤️ by [Yaniv Shahar](https://github.com/yanivshahar1)
