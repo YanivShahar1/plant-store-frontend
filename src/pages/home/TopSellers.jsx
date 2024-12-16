@@ -14,7 +14,7 @@ import 'swiper/css/navigation';
 import { useFetchAllPlantsQuery } from '../../redux/features/plants/plantsApi';
 
 
-const categories = ["Choose a type", "Indoor Plants", "Outdoor Plants", "Succulents & Cacti", "Flowering Plants","Trees", "Trees & Shrubs", "Herbs & Vegetables"];
+const categories = ["Choose a type", "Indoor Plants", "Outdoor Plants", "Succulents & Cacti", "Flowering Plants", "Trees & Shrubs", "Herbs & Vegetables"];
 const TopSellers = () => {
     const [selectedCategory, setSelectedCategory] = useState("Choose a type");
     const { data: plants = [] } = useFetchAllPlantsQuery();
@@ -25,7 +25,7 @@ const TopSellers = () => {
 
     const filteredPlants = selectedCategory === "Choose a type"
         ? plants
-        : plants.filter(plant => plant.category === selectedCategory.toLowerCase());
+        : plants.filter(plant => plant.category.toLowerCase() === selectedCategory.toLowerCase());
 
     return (
         <div className='py-10 '>
