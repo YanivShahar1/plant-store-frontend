@@ -13,7 +13,8 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { useFetchAllPlantsQuery } from '../../redux/features/plants/plantsApi';
 
-const categories = ["Choose a type", "Indoor", "Outdoor", "Succulents", "Flowers","Trees", "Herbs"];
+
+const categories = ["Choose a type", "Indoor Plants", "Outdoor Plants", "Succulents & Cacti", "Flowering Plants","Trees", "Trees & Shrubs", "Herbs & Vegetables"];
 const TopSellers = () => {
     const [selectedCategory, setSelectedCategory] = useState("Choose a type");
     const { data: plants = [] } = useFetchAllPlantsQuery();
