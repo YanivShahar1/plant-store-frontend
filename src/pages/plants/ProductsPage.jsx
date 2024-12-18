@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import PlantCard from './PlantCard';
 import { useFetchAllPlantsQuery } from '../../redux/features/plants/plantsApi';
 import { FiFilter, FiLoader, FiRotateCcw, FiArrowUp, FiArrowDown } from 'react-icons/fi';
+import SearchInput from '../../components/SearchInput/SearchInput';
 
 const ProductsPage = () => {
   const { data: plants, isLoading, isError } = useFetchAllPlantsQuery();
+  
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search');
   console.log('API Response:', plants);
 
   const [filters, setFilters] = useState({
     category: 'all',
     maintenance: 'all',
     priceRange: 'all',
-    status: 'all'
+    status: 'all',
+    search: searchQuery || ''
   });
 
   const [sortConfig, setSortConfig] = useState({
@@ -52,7 +58,18 @@ const ProductsPage = () => {
         priceMatch = plant.price >= min && plant.price <= max;
       }
 
-      return categoryMatch && maintenanceMatch && priceMatch && statusMatch;
+      // Search filters:
+      let searchMatch = true;
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        searchMatch = 
+          plant.name.toLowerCase().includes(searchLower) ||
+          plant.description.toLowerCase().includes(searchLower) ||
+          plant.category.toLowerCase().includes(searchLower) ||
+          (plant.tags && plant.tags.some(tag => tag.toLowerCase().includes(searchLower)));
+      }
+
+      return categoryMatch && maintenanceMatch && priceMatch && statusMatch && searchMatch;
     });
   };
 
@@ -130,6 +147,11 @@ const ProductsPage = () => {
             </button>
           </div>
         </div>
+        
+        {/* Search Input */}
+        {/* <div className="mb-4">
+            <SearchInput className="sm:w-72 w-full" />
+        </div> */}
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <select
