@@ -19,12 +19,12 @@ const Banner = () => {
           brightening up any space. Start your indoor garden today!
         </p>
         <div className="flex gap-4">
-          <a 
-            href="#featured-plants" // Smooth scroll to your TopSellers or Recommended section
-            className='btn-primary inline-flex items-center'
-          >
-            View Collection
-          </a>
+        <Link 
+          to="/products" 
+          className='btn-primary inline-flex items-center'
+        >
+          View Collection
+        </Link>
           <Link 
             to="/about" 
             className='border-2 border-primary px-6 py-2 rounded-md hover:bg-primary hover:text-white transition-all duration-200'
