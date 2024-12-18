@@ -29,7 +29,7 @@ const EducationalNoticeModal = () => {
                         </h2>
                         <div className="text-sm text-blue-700 space-y-2">
                             <p>
-                                Welcome! This is a mock e-commerce project created for educational purposes and to demonstrate web development skills.
+                                Welcome! This is a mock e-commerce project created for educational purposes and to demonstrate full-stack development capabilities.
                             </p>
                             <p>
                                 Key points to note:
@@ -37,7 +37,9 @@ const EducationalNoticeModal = () => {
                             <ul className="list-disc pl-4 space-y-1">
                                 <li>This is not a real store</li>
                                 <li>Products and prices are fictional</li>
-                                <li>Built with MERN stack (MongoDB, Express.js, React, Node.js)</li>
+                                <li>Full-stack application built with MERN stack:</li>
+                                <li className="ml-6">Backend: Node.js, Express.js, MongoDB</li>
+                                <li className="ml-6">Frontend: React, Redux, TailwindCSS</li>
                                 <li>No real transactions are processed</li>
                             </ul>
                         </div>
