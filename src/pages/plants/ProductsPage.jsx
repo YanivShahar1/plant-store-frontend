@@ -3,27 +3,49 @@ import { useSearchParams } from 'react-router-dom';
 import PlantCard from './PlantCard';
 import { useFetchAllPlantsQuery } from '../../redux/features/plants/plantsApi';
 import { FiFilter, FiLoader, FiRotateCcw, FiArrowUp, FiArrowDown } from 'react-icons/fi';
-import SearchInput from '../../components/SearchInput/SearchInput';
 
 const ProductsPage = () => {
   const { data: plants, isLoading, isError } = useFetchAllPlantsQuery();
-  
   const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get('search');
-  console.log('API Response:', plants);
 
-  const [filters, setFilters] = useState({
-    category: 'all',
-    maintenance: 'all',
+  // Get all URL parameters
+  const urlCategory = searchParams.get('category');
+  const urlMaintenance = searchParams.get('maintenance');
+  const urlSort = searchParams.get('sort');
+  const urlOnSale = searchParams.get('onSale');
+  const searchQuery = searchParams.get('search');
+// Set initial filters based on URL parameters
+const [filters, setFilters] = useState({
+    category: urlCategory || 'all',
+    maintenance: urlMaintenance || 'all',
     priceRange: 'all',
     status: 'all',
-    search: searchQuery || ''
+    search: searchQuery || '',
+    onSale: urlOnSale === 'true'
   });
 
   const [sortConfig, setSortConfig] = useState({
-    field: 'price',
+    field: urlSort === 'newest' ? 'date' : 'price',
     direction: 'asc'
   });
+
+  // Update filters when URL parameters change
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      category: urlCategory || 'all',
+      maintenance: urlMaintenance || 'all',
+      search: searchQuery || '',
+      onSale: urlOnSale === 'true'
+    }));
+
+    if (urlSort === 'newest') {
+      setSortConfig({
+        field: 'date',
+        direction: 'desc'
+      });
+    }
+  }, [urlCategory, urlMaintenance, urlSort, urlOnSale, searchQuery]);
 
   const categories = [
     'Indoor Plants',
@@ -51,6 +73,7 @@ const ProductsPage = () => {
       const categoryMatch = filters.category === 'all' || plant.category === filters.category;
       const maintenanceMatch = filters.maintenance === 'all' || plant.maintenanceLevel === filters.maintenance;
       const statusMatch = filters.status === 'all' || plant.status === filters.status;
+      const saleMatch = !filters.onSale || (plant.oldPrice && plant.oldPrice > plant.price);
       
       let priceMatch = true;
       if (filters.priceRange !== 'all') {
@@ -58,7 +81,6 @@ const ProductsPage = () => {
         priceMatch = plant.price >= min && plant.price <= max;
       }
 
-      // Search filters:
       let searchMatch = true;
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
@@ -69,7 +91,7 @@ const ProductsPage = () => {
           (plant.tags && plant.tags.some(tag => tag.toLowerCase().includes(searchLower)));
       }
 
-      return categoryMatch && maintenanceMatch && priceMatch && statusMatch && searchMatch;
+      return categoryMatch && maintenanceMatch && priceMatch && statusMatch && searchMatch && saleMatch;
     });
   };
 
@@ -77,6 +99,9 @@ const ProductsPage = () => {
     return [...plantsToSort].sort((a, b) => {
       if (sortConfig.field === 'price') {
         return sortConfig.direction === 'asc' ? a.price - b.price : b.price - a.price;
+      }
+      if (sortConfig.field === 'date') {
+        return new Date(b.dateAdded) - new Date(a.dateAdded);
       }
       return 0;
     });
@@ -87,7 +112,13 @@ const ProductsPage = () => {
       category: 'all',
       maintenance: 'all',
       priceRange: 'all',
-      status: 'all'
+      status: 'all',
+      search: '',
+      onSale: false
+    });
+    setSortConfig({
+      field: 'price',
+      direction: 'asc'
     });
   };
 
@@ -117,6 +148,15 @@ const ProductsPage = () => {
     );
   }
 
+  // Generate page title based on filters
+  const getPageTitle = () => {
+    if (filters.onSale) return "Plants on Sale";
+    if (sortConfig.field === 'date') return "New Arrivals";
+    if (filters.maintenance === 'Easy') return "Easy Care Plants";
+    if (filters.category !== 'all') return filters.category;
+    return "Our Collection";
+  };
+  
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
@@ -147,11 +187,6 @@ const ProductsPage = () => {
             </button>
           </div>
         </div>
-        
-        {/* Search Input */}
-        {/* <div className="mb-4">
-            <SearchInput className="sm:w-72 w-full" />
-        </div> */}
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <select
