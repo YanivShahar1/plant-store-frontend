@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import { useEffect, useState } from 'react'
 import Loading from './components/Loading'
 import { AuthProvide } from './context/AuthContext'
+import EducationalNoticeModal from './components/SearchInput/EducationalNoticeModal'
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Outlet />
         </main>
         <Footer />
+        <EducationalNoticeModal/>
       </AuthProvide>
 
     </>
