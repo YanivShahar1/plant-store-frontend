@@ -4,6 +4,20 @@ import { FiHeart, FiShield, FiTruck, FiUsers } from 'react-icons/fi';
 const AboutPage = () => {
   return (
     <div className="max-w-7xl mx-auto">
+      {/* Disclaimer Banner */}
+      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8 rounded-lg">
+        <div className="flex">
+          <div className="flex-1">
+            <p className="text-sm text-blue-700">
+              <strong>Educational Project Notice:</strong> This is a mock e-commerce project created for learning purposes. 
+              The store, products, and information presented are not real and are used to demonstrate web development skills 
+              using the MERN stack (MongoDB, Express.js, React, Node.js). The images, prices, and company details are fictional.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Rest of the component remains the same */}
       {/* Hero Section */}
       <div className="mb-16 text-center">
         <h1 className="text-4xl font-bold text-secondary mb-4">About Our Plant Shop</h1>
