@@ -1,15 +1,27 @@
 import React from 'react';
 import { FiShoppingCart, FiSun, FiDroplet, FiThermometer } from "react-icons/fi";
+import { HiOutlineHeart, HiHeart } from "react-icons/hi2";
 import { getImgUrl } from '../../utils/getImgUrl';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/features/cart/cartSlice';
+import { addToWishlist, removeFromWishlist } from '../../redux/features/wishlist/wishlistSlice';
 
 const PlantCard = ({ plant }) => {
   const dispatch = useDispatch();
+  const wishlistItems = useSelector(state => state.wishlist.wishlistItems);
+  const isInWishlist = wishlistItems.some(item => item._id === plant._id);
   
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
+  };
+
+  const handleWishlist = () => {
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(plant));
+    } else {
+      dispatch(addToWishlist(plant));
+    }
   };
 
   const discountPercentage = plant.oldPrice 
@@ -39,6 +51,17 @@ const PlantCard = ({ plant }) => {
             )}
           </div>
         </Link>
+        {/* Wishlist Button */}
+        <button
+          onClick={handleWishlist}
+          className="absolute top-4 left-4 p-2 rounded-full bg-white/80 hover:bg-white transition-colors shadow-md"
+        >
+          {isInWishlist ? (
+            <HiHeart className="w-5 h-5 text-red-500" />
+          ) : (
+            <HiOutlineHeart className="w-5 h-5 text-gray-600 hover:text-red-500" />
+          )}
+        </button>
       </div>
 
       {/* Content Container */}
