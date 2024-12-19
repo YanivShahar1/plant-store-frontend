@@ -19,6 +19,7 @@ import UpdatePlant from "../pages/dashboard/editPlant/UpdatePlant";
 import UserDashboard from "../pages/dashboard/users/UserDashboard";
 import ProductsPage from "../pages/plants/ProductsPage";
 import AboutPage from "../pages/about/AboutPage";
+import WishlistPage from "../pages/plants/WishlistPage";
 
 
 const ScrollToTopWrapper = ({ children }) => {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/orders",
         element: <PrivateRoute><OrderPage /></PrivateRoute>,
+      },
+      {
+        path: "/wishlist",
+        element: <PrivateRoute><WishlistPage /></PrivateRoute>,
       },
       {
         path: "/products",
