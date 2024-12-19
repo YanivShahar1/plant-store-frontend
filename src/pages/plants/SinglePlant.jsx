@@ -1,9 +1,11 @@
 import React from 'react';
 import { FiShoppingCart } from "react-icons/fi";
+import { HiOutlineHeart, HiHeart } from "react-icons/hi2";
 import { useParams } from "react-router-dom";
 import { getImgUrl } from '../../utils/getImgUrl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/features/cart/cartSlice';
+import { addToWishlist, removeFromWishlist } from '../../redux/features/wishlist/wishlistSlice';
 import { useFetchPlantByIdQuery } from '../../redux/features/plants/plantsApi';
 import Loading from '../../components/Loading';
 
@@ -11,9 +13,21 @@ export const SinglePlant = () => {
     const { id } = useParams();
     const { data: plant, isLoading, isError } = useFetchPlantByIdQuery(id);
     const dispatch = useDispatch();
+    
+    // Get wishlist items from Redux store
+    const wishlistItems = useSelector(state => state.wishlist.wishlistItems);
+    const isInWishlist = wishlistItems.some(item => item._id === id);
 
     const handleAddToCart = (product) => {
         dispatch(addToCart(product));
+    };
+
+    const handleWishlist = () => {
+        if (isInWishlist) {
+            dispatch(removeFromWishlist(plant));
+        } else {
+            dispatch(addToWishlist(plant));
+        }
     };
 
     if (isLoading) return <Loading />; 
@@ -24,12 +38,24 @@ export const SinglePlant = () => {
         <div className="h-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
             <div className="md:flex">
                 {/* Left side - Image */}
-                <div className="md:w-1/3">
+                <div className="md:w-1/3 relative">
                     <img
                         src={`${getImgUrl(plant.coverImage)}`}
                         alt={plant.name}
                         className="w-full h-full object-cover"
                     />
+                    {/* Wishlist Button */}
+                    <button
+                        onClick={handleWishlist}
+                        className="absolute top-4 left-4 p-2 rounded-full bg-white/80 hover:bg-white transition-colors shadow-md"
+                        aria-label={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                    >
+                        {isInWishlist ? (
+                            <HiHeart className="w-6 h-6 text-red-500" />
+                        ) : (
+                            <HiOutlineHeart className="w-6 h-6 text-gray-600 hover:text-red-500" />
+                        )}
+                    </button>
                 </div>
 
                 {/* Right side - Plant Information */}
@@ -113,14 +139,36 @@ export const SinglePlant = () => {
                         </div>
                     )}
 
-                    <div className="flex justify-center">
+                    <div className="flex justify-center gap-4">
                         <button
                             onClick={() => handleAddToCart(plant)}
-                            className="bg-green-600 text-white py-3 px-12 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 max-w-xs"
+                            className="bg-green-600 text-white py-3 px-12 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
                             disabled={plant.status === 'Out of Stock'}
                         >
                             <FiShoppingCart className="text-xl" />
                             <span>Add to Cart</span>
+                        </button>
+                        
+                        <button
+                            onClick={handleWishlist}
+                            className={`py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 border ${
+                                isInWishlist 
+                                    ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100' 
+                                    : 'border-gray-200 hover:bg-gray-50'
+                            }`}
+                            aria-label={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                        >
+                            {isInWishlist ? (
+                                <>
+                                    <HiHeart className="text-xl" />
+                                    <span>Remove from Wishlist</span>
+                                </>
+                            ) : (
+                                <>
+                                    <HiOutlineHeart className="text-xl" />
+                                    <span>Add to Wishlist</span>
+                                </>
+                            )}
                         </button>
                     </div>
 
