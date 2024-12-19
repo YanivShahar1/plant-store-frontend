@@ -11,11 +11,12 @@ import SearchInput from "./SearchInput/SearchInput";
 const navigation = [
     {name: "Dashboard", href:"/user-dashboard"},
     {name: "Orders", href:"/orders"},
+    {name: "Wishlist", href:"/wishlist"}, // Added Wishlist to navigation
     {name: "Cart Page", href:"/cart"},
     {name: "Check Out", href:"/checkout"},
 ];
 
-// Main navigation categories
+// Rest of the categories array remains the same
 const categories = [
     { name: "All Plants", href: "/products" },
     { name: "Indoor Plants", href: "/products?category=Indoor Plants" },
@@ -30,6 +31,7 @@ const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
     const cartItems = useSelector(state => state.cart.cartItems);
+    const wishlistItems = useSelector(state => state.wishlist.wishlistItems); // Added wishlist items
     const {currentUser, logout} = useAuth();
 
     const handleSearch = (e) => {
@@ -65,12 +67,20 @@ const Navbar = () => {
 
                     {/* Right side - Navigation Icons */}
                     <div className="flex items-center gap-6">
-                        <div className="hidden sm:flex flex-col items-center">
-                            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <Link 
+                            to="/wishlist" 
+                            className="hidden sm:flex flex-col items-center"
+                        >
+                            <div className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
                                 <HiOutlineHeart className="h-6 w-6" />
-                            </button>
+                                {wishlistItems.length > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                        {wishlistItems.length}
+                                    </span>
+                                )}
+                            </div>
                             <span className="text-xs text-gray-600">Wishlist</span>
-                        </div>
+                        </Link>
 
                         <Link 
                             to="/cart" 
@@ -87,6 +97,7 @@ const Navbar = () => {
                             <span className="text-xs text-gray-600">Cart</span>
                         </Link>
 
+                        {/* Rest of the navbar code remains the same */}
                         <div className="relative">
                             {currentUser ? (
                                 <>
