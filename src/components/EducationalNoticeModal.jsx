@@ -2,18 +2,32 @@ import React, { useEffect, useState } from 'react';
 
 const EducationalNoticeModal = () => {
     const [showModal, setShowModal] = useState(false);
+    
+    const SHOW_INTERVAL = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+    const STORAGE_KEY = 'lastNoticeShown';
 
     useEffect(() => {
-        // Check if user has seen the notice
-        const hasSeenNotice = localStorage.getItem('hasSeenProjectNotice');
-        if (!hasSeenNotice) {
-            setShowModal(true);
-        }
+        const checkAndShowModal = () => {
+            const lastShown = localStorage.getItem(STORAGE_KEY);
+            const now = Date.now();
+            
+            if (!lastShown || (now - Number(lastShown)) >= SHOW_INTERVAL) {
+                setShowModal(true);
+                localStorage.setItem(STORAGE_KEY, now.toString());
+            }
+        };
+
+        // Check on initial load
+        checkAndShowModal();
+
+        // Set up periodic check
+        const intervalId = setInterval(checkAndShowModal, SHOW_INTERVAL);
+
+        // Cleanup on unmount
+        return () => clearInterval(intervalId);
     }, []);
 
     const handleAccept = () => {
-        // Save to localStorage and close modal
-        localStorage.setItem('hasSeenProjectNotice', 'true');
         setShowModal(false);
     };
 
