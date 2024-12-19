@@ -6,7 +6,7 @@ import Footer from './components/Footer'
 import { useEffect, useState } from 'react'
 import Loading from './components/Loading'
 import { AuthProvide } from './context/AuthContext'
-import EducationalNoticeModal from './components/SearchInput/EducationalNoticeModal'
+import EducationalNoticeModal from './components/EducationalNoticeModal'
 
 function App() {
 
