@@ -16,9 +16,9 @@ import { useFetchAllPlantsQuery } from '../../redux/features/plants/plantsApi'; 
 const Recommended = () => {
     const { data: plants = [] } = useFetchAllPlantsQuery();
 
-    useEffect(() => {
-        console.log(`Recommended plants:`, plants);
-    }, [plants]);
+    // useEffect(() => {
+    //     console.log(`Recommended plants:`, plants);
+    // }, [plants]);
 
     return (
         <div id="featured-plants" className="py-16">

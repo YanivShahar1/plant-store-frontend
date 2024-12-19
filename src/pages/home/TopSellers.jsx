@@ -19,9 +19,9 @@ const TopSellers = () => {
     const [selectedCategory, setSelectedCategory] = useState("Choose a type");
     const { data: plants = [] } = useFetchAllPlantsQuery();
 
-    useEffect(() => {
-        console.log(`plants: ${plants}`);
-    }, [plants]);
+    // useEffect(() => {
+    //     console.log(`plants: ${plants}`);
+    // }, [plants]);
 
     const filteredPlants = selectedCategory === "Choose a type"
         ? plants
